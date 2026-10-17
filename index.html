@@ -1,0 +1,2869 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="DREXON — Derek Johnson Elvis | Computer Engineering Student | Cybersecurity | AI & Automation">
+<title>DREXON | Derek Johnson Elvis</title>
+<link rel="icon" type="image/png" href="assets/images/drexon-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  /* ========== THEME TOKENS ========== */
+  :root{
+    --bg:#0A0A0A; --surface:#111; --card:#161616; --border:#242424;
+    --border-accent:rgba(255,92,35,.35);
+    --text:#e8e8e8; --text-muted:#9a9a9a;
+    --accent:#FF5C23; --accent-dim:rgba(255,92,35,.12);
+    --accent-glow:rgba(255,92,35,.20);
+    --link:#FF5C23; --focus:#FF5C23;
+    --success:#22c55e; --warning:#eab308; --danger:#ef4444;
+    --terminal-bg:#0d0d0d; --prompt:#FF5C23;
+    --font-mono:'JetBrains Mono','Fira Code',Consolas,monospace;
+    --font-sans:'Inter',system-ui,-apple-system,sans-serif;
+    --radius:6px; --radius-lg:10px;
+    --shadow:0 4px 24px rgba(0,0,0,.4);
+    --transition:.2s ease;
+  }
+  [data-theme="blue"]{
+    --bg:#080B12; --surface:#0c1018; --card:#111722; --border:#1a2332;
+    --border-accent:rgba(22,139,255,.35);
+    --text:#e2e8f0; --text-muted:#8899aa;
+    --accent:#168BFF; --accent-dim:rgba(22,139,255,.12);
+    --accent-glow:rgba(22,139,255,.20);
+    --link:#168BFF; --focus:#168BFF; --prompt:#168BFF;
+    --terminal-bg:#0a0e16;
+  }
+  [data-theme="lime"]{
+    --bg:#0A0A0A; --surface:#111; --card:#161616; --border:#242424;
+    --border-accent:rgba(200,255,0,.30);
+    --text:#e8e8e8; --text-muted:#9a9a9a;
+    --accent:#C8FF00; --accent-dim:rgba(200,255,0,.10);
+    --accent-glow:rgba(200,255,0,.18);
+    --link:#C8FF00; --focus:#C8FF00; --prompt:#C8FF00;
+    --terminal-bg:#0d0d0d;
+  }
+
+  /* ========== RESET ========== */
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  @media (prefers-reduced-motion:reduce){
+    html{scroll-behavior:auto}
+    *,*::before,*::after{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  }
+  body{
+    font-family:var(--font-sans);background:var(--bg);color:var(--text);
+    line-height:1.6;min-height:100vh;overflow-x:hidden;
+  }
+  a{color:var(--link);text-decoration:none;transition:color var(--transition)}
+  a:hover{color:var(--text)}
+  a:focus-visible,button:focus-visible,input:focus-visible,select:focus-visible,textarea:focus-visible{
+    outline:2px solid var(--focus);outline-offset:2px;border-radius:3px
+  }
+  img{max-width:100%;height:auto;display:block}
+  code,pre,.mono{font-family:var(--font-mono)}
+  button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
+  ul,ol{list-style:none}
+
+  /* ========== LAYOUT ========== */
+  .container{width:100%;max-width:1120px;margin:0 auto;padding:0 1.25rem}
+  .section{padding:3.5rem 0;display:none}
+  .section.active{display:block}
+  .section-title{
+    font-family:var(--font-mono);font-size:1.3rem;font-weight:600;
+    margin-bottom:.5rem;display:flex;align-items:center;gap:.6rem
+  }
+  .section-title .prompt{color:var(--prompt)}
+  .section-desc{color:var(--text-muted);font-size:.95rem;margin-bottom:2rem;max-width:660px}
+
+  /* ========== HEADER ========== */
+  .header{
+    position:sticky;top:0;z-index:100;
+    background:rgba(10,10,10,.85);backdrop-filter:blur(12px);
+    border-bottom:1px solid var(--border)
+  }
+  [data-theme="blue"] .header{background:rgba(8,11,18,.88)}
+  .header-inner{
+    display:flex;align-items:center;justify-content:space-between;
+    height:60px;gap:1rem
+  }
+  .logo{
+    font-family:var(--font-mono);font-weight:700;font-size:1.05rem;
+    color:var(--accent);letter-spacing:.04em;
+    display:flex;align-items:center;gap:.5rem
+  }
+  .logo .logo-mark{
+    width:26px;height:26px;border:1px solid var(--border-accent);
+    border-radius:4px;display:flex;align-items:center;justify-content:center;
+    background:var(--accent-dim);overflow:hidden;flex-shrink:0
+  }
+  .logo .logo-mark img{width:100%;height:100%;object-fit:cover}
+  .logo .logo-mark svg{width:13px;height:13px;color:var(--accent)}
+  .logo .logo-sub{color:var(--text-muted);font-weight:400;font-size:.75rem;margin-left:.15rem}
+  .nav{display:flex;align-items:center;gap:.15rem}
+  .nav-link{
+    font-family:var(--font-mono);font-size:.76rem;font-weight:500;
+    padding:.45rem .7rem;color:var(--text-muted);
+    border-radius:var(--radius);transition:all var(--transition);
+    text-transform:uppercase;letter-spacing:.04em;
+    display:inline-flex;align-items:center;gap:.35rem
+  }
+  .nav-link:hover{color:var(--text);background:var(--accent-dim)}
+  .nav-link.active{
+    color:var(--accent);background:var(--accent-dim);
+    border:1px solid var(--border-accent)
+  }
+  .header-actions{display:flex;align-items:center;gap:.45rem}
+  .hire-btn{
+    display:inline-flex;align-items:center;gap:.4rem;
+    font-family:var(--font-mono);font-size:.74rem;font-weight:600;
+    padding:.45rem .8rem;border-radius:var(--radius);
+    background:var(--accent);color:#0a0a0a;
+    border:1px solid var(--accent);letter-spacing:.03em;
+    text-transform:uppercase;transition:all var(--transition);
+    position:relative
+  }
+  .hire-btn:hover{filter:brightness(1.1);color:#0a0a0a}
+  .hire-btn svg{width:13px;height:13px}
+  .hire-pulse{animation:hirePulse 3s ease-in-out infinite}
+  @keyframes hirePulse{
+    0%,100%{box-shadow:0 0 0 0 var(--accent-glow)}
+    50%{box-shadow:0 0 0 8px transparent}
+  }
+  .hire-btn.is-unavailable{
+    opacity:.55;cursor:not-allowed;background:var(--surface);
+    color:var(--text-muted);border-color:var(--border);
+    animation:none
+  }
+  .theme-btn,.icon-btn{
+    width:36px;height:36px;display:flex;align-items:center;justify-content:center;
+    border-radius:var(--radius);border:1px solid var(--border);
+    color:var(--text-muted);transition:all var(--transition)
+  }
+  .theme-btn:hover,.icon-btn:hover{
+    color:var(--accent);border-color:var(--border-accent);background:var(--accent-dim)
+  }
+  .theme-wrap{position:relative}
+  .theme-menu{
+    position:absolute;top:calc(100% + 6px);right:0;
+    background:var(--card);border:1px solid var(--border);
+    border-radius:var(--radius-lg);padding:.4rem;min-width:180px;
+    box-shadow:var(--shadow);display:none;z-index:200
+  }
+  .theme-menu.open{display:block}
+  .theme-option{
+    display:flex;align-items:center;gap:.6rem;width:100%;
+    padding:.5rem .7rem;border-radius:var(--radius);
+    font-size:.85rem;color:var(--text-muted);transition:all var(--transition)
+  }
+  .theme-option:hover{background:var(--accent-dim);color:var(--text)}
+  .theme-option.active{color:var(--accent);background:var(--accent-dim)}
+  .theme-dot{width:12px;height:12px;border-radius:50%;flex-shrink:0}
+  .theme-dot.orange{background:#FF5C23}
+  .theme-dot.blue{background:#168BFF}
+  .theme-dot.lime{background:#C8FF00}
+  .mobile-toggle{
+    display:none;width:36px;height:36px;align-items:center;justify-content:center;
+    border:1px solid var(--border);border-radius:var(--radius);color:var(--text-muted)
+  }
+  .mobile-nav{
+    display:none;flex-direction:column;padding:.75rem 1.25rem 1rem;
+    border-top:1px solid var(--border);background:var(--surface)
+  }
+  .mobile-nav.open{display:flex}
+  .mobile-nav .nav-link{padding:.65rem .75rem;font-size:.85rem;justify-content:flex-start}
+
+  /* ========== BUTTONS ========== */
+  .btn{
+    display:inline-flex;align-items:center;gap:.45rem;
+    padding:.6rem 1.1rem;font-family:var(--font-mono);
+    font-size:.8rem;font-weight:500;border-radius:var(--radius);
+    border:1px solid transparent;transition:all var(--transition);
+    white-space:nowrap
+  }
+  .btn svg{width:14px;height:14px}
+  .btn-primary{background:var(--accent);color:#0a0a0a;border-color:var(--accent)}
+  .btn-primary:hover{filter:brightness(1.1);color:#0a0a0a}
+  .btn-outline{background:transparent;color:var(--accent);border-color:var(--border-accent)}
+  .btn-outline:hover{background:var(--accent-dim)}
+  .btn-ghost{background:transparent;color:var(--text-muted);border-color:var(--border)}
+  .btn-ghost:hover{color:var(--text);border-color:var(--text-muted)}
+  .btn-sm{padding:.35rem .75rem;font-size:.74rem}
+  .btn-sm svg{width:12px;height:12px}
+  .btn:disabled{opacity:.5;cursor:not-allowed}
+
+  /* ========== LOADER ========== */
+  .loader{
+    position:fixed;inset:0;z-index:9998;
+    background:var(--bg);
+    display:flex;align-items:center;justify-content:center;
+    transition:opacity .35s ease;
+  }
+  .loader.done{opacity:0;pointer-events:none}
+  .loader-inner{
+    font-family:var(--font-mono);
+    color:var(--accent);
+    text-align:center;
+    max-width:520px;
+    padding:2rem;
+  }
+  .loader-logo{
+    font-size:1.6rem;font-weight:700;letter-spacing:.32em;
+    color:var(--accent);
+    margin-bottom:1.25rem;
+    text-shadow:0 0 24px var(--accent-glow);
+  }
+  .loader-bar{
+    width:100%;height:2px;
+    background:var(--border);
+    border-radius:2px;
+    overflow:hidden;
+    margin-bottom:.85rem;
+  }
+  .loader-bar-fill{
+    height:100%;width:0%;
+    background:linear-gradient(90deg,transparent,var(--accent),transparent);
+    animation:loaderFill 1.4s ease-in-out forwards;
+  }
+  @keyframes loaderFill{
+    0%{width:0%}
+    60%{width:75%}
+    100%{width:100%}
+  }
+  .loader-line{
+    font-size:.72rem;color:var(--text-muted);
+    letter-spacing:.05em;
+    opacity:0;
+    animation:loaderFade .35s ease forwards;
+  }
+  .loader-line:nth-child(1){animation-delay:.05s}
+  .loader-line:nth-child(2){animation-delay:.35s}
+  .loader-line:nth-child(3){animation-delay:.65s}
+  .loader-line:nth-child(4){animation-delay:.95s}
+  @keyframes loaderFade{to{opacity:1}}
+  @media (prefers-reduced-motion:reduce){
+    .loader-bar-fill{animation:none;width:100%}
+    .loader-line{animation:none;opacity:1}
+  }
+
+  /* ========== CARDS ========== */
+  .card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:var(--radius-lg);padding:1.25rem;
+    transition:border-color var(--transition)
+  }
+  .card:hover{border-color:var(--border-accent)}
+  .card-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(280px,1fr));gap:1rem}
+
+  /* ========== TERMINAL ========== */
+  .terminal{
+    background:var(--terminal-bg);border:1px solid var(--border);
+    border-radius:var(--radius-lg);overflow:hidden;
+    font-family:var(--font-mono);font-size:.85rem;
+    box-shadow:0 0 0 1px rgba(255,255,255,.02), 0 8px 32px rgba(0,0,0,.5)
+  }
+  .terminal-bar{
+    display:flex;align-items:center;gap:.4rem;
+    padding:.55rem .85rem;background:var(--surface);
+    border-bottom:1px solid var(--border)
+  }
+  .terminal-dot{width:10px;height:10px;border-radius:50%;background:var(--border)}
+  .terminal-dot.r{background:#ef4444;opacity:.7}
+  .terminal-dot.y{background:#eab308;opacity:.7}
+  .terminal-dot.g{background:#22c55e;opacity:.7}
+  .terminal-title{margin-left:.5rem;color:var(--text-muted);font-size:.75rem}
+  .terminal-body{padding:1.1rem 1.2rem;line-height:1.75}
+  .terminal-line{margin-bottom:.3rem}
+  .terminal-prompt{color:var(--prompt)}
+  .terminal-cmd{color:var(--text)}
+  .terminal-out{color:var(--text-muted)}
+  .terminal-cursor{
+    display:inline-block;width:8px;height:15px;background:var(--accent);
+    vertical-align:-2px;animation:blink 1.1s step-end infinite
+  }
+  @keyframes blink{50%{opacity:0}}
+
+  /* ========== BADGES / TAGS ========== */
+  .badge{
+    display:inline-flex;align-items:center;gap:.3rem;
+    padding:.2rem .55rem;font-family:var(--font-mono);font-size:.68rem;
+    font-weight:500;border-radius:4px;border:1px solid var(--border);
+    color:var(--text-muted);background:var(--surface)
+  }
+  .badge-progress{color:var(--warning);border-color:rgba(234,179,8,.3);background:rgba(234,179,8,.08)}
+  .badge-completed{color:var(--success);border-color:rgba(34,197,94,.3);background:rgba(34,197,94,.08)}
+  .tags{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.6rem}
+  .tag{
+    font-family:var(--font-mono);font-size:.68rem;padding:.15rem .45rem;
+    border-radius:3px;background:var(--surface);border:1px solid var(--border);
+    color:var(--text-muted);display:inline-flex;align-items:center;gap:.3rem
+  }
+
+  /* ========== STATUS BADGES ========== */
+  .status-badge{
+    display:inline-flex;align-items:center;gap:.35rem;
+    padding:.25rem .6rem;
+    font-family:var(--font-mono);
+    font-size:.66rem;font-weight:600;
+    letter-spacing:.06em;text-transform:uppercase;
+    border-radius:100px;
+    border:1px solid var(--border);
+    background:rgba(255,255,255,.02);
+    backdrop-filter:blur(8px);
+    -webkit-backdrop-filter:blur(8px);
+    color:var(--text-muted);
+    transition:all var(--transition);
+    white-space:nowrap;line-height:1;
+  }
+  .status-badge .sb-dot{
+    width:6px;height:6px;border-radius:50%;
+    background:currentColor;flex-shrink:0;
+    box-shadow:0 0 6px currentColor;
+  }
+  .status-badge[data-status="LIVE"]{color:#22c55e;border-color:rgba(34,197,94,.4);background:rgba(34,197,94,.08)}
+  .status-badge[data-status="COMPLETED"]{color:#22c55e;border-color:rgba(34,197,94,.35);background:rgba(34,197,94,.06)}
+  .status-badge[data-status="IN_PROGRESS"]{color:#eab308;border-color:rgba(234,179,8,.4);background:rgba(234,179,8,.08)}
+  .status-badge[data-status="PENDING"]{color:#f59e0b;border-color:rgba(245,158,11,.35);background:rgba(245,158,11,.06)}
+  .status-badge[data-status="PLANNED"]{color:#8899aa;border-color:rgba(136,153,170,.3);background:rgba(136,153,170,.06)}
+  .status-badge[data-status="COMING_SOON"]{color:#a855f7;border-color:rgba(168,85,247,.4);background:rgba(168,85,247,.08)}
+  .status-badge[data-status="ON_HOLD"]{color:#94a3b8;border-color:rgba(148,163,184,.3);background:rgba(148,163,184,.06)}
+  .status-badge[data-status="ARCHIVED"]{color:#6b7280;border-color:rgba(107,114,128,.3);background:rgba(107,114,128,.06)}
+  .status-badge[data-status="PUBLISHED"]{color:#06b6d4;border-color:rgba(6,182,212,.4);background:rgba(6,182,212,.08)}
+  .status-badge[data-status="DRAFT"]{color:#a78bfa;border-color:rgba(167,139,250,.35);background:rgba(167,139,250,.06)}
+
+  /* ========== HERO ========== */
+  .hero{
+    display:grid;grid-template-columns:1.05fr 1fr;gap:2.5rem;
+    align-items:center;padding:3rem 0 2rem
+  }
+  .hero-eyebrow{
+    display:inline-flex;align-items:center;gap:.4rem;
+    font-family:var(--font-mono);font-size:.72rem;
+    color:var(--accent);text-transform:uppercase;letter-spacing:.12em;
+    padding:.3rem .6rem;border:1px solid var(--border-accent);
+    border-radius:20px;background:var(--accent-dim);margin-bottom:1.1rem
+  }
+  .hero-eyebrow svg{width:12px;height:12px}
+  .hero-content h1{
+    font-family:var(--font-mono);font-size:clamp(1.7rem,3.6vw,2.3rem);
+    font-weight:700;line-height:1.22;margin-bottom:.75rem;letter-spacing:-.01em
+  }
+  .hero-content h1 .accent{color:var(--accent)}
+  .hero-name{
+    font-size:.85rem;color:var(--text-muted);font-family:var(--font-mono);
+    margin-bottom:.75rem;letter-spacing:.04em
+  }
+  .hero-content .subtitle{
+    color:var(--text);font-size:.98rem;font-weight:500;
+    margin-bottom:.6rem;max-width:520px
+  }
+  .hero-content .intro{
+    color:var(--text-muted);font-size:.9rem;margin-bottom:1.5rem;max-width:520px
+  }
+  .hero-ctas{display:flex;flex-wrap:wrap;gap:.55rem}
+  .interests{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:2rem}
+  .interest-item{
+    display:flex;align-items:center;gap:.4rem;font-size:.78rem;
+    color:var(--text-muted);padding:.35rem .7rem;
+    border:1px solid var(--border);border-radius:var(--radius);background:var(--surface)
+  }
+  .interest-item svg{color:var(--accent);width:13px;height:13px}
+
+  /* ========== ABOUT ========== */
+  .about-grid{display:grid;grid-template-columns:1fr 1fr;gap:1.5rem;align-items:start}
+  .about-left{display:flex;flex-direction:column;gap:1rem}
+  .about-right{display:flex;flex-direction:column;gap:1rem}
+  .about-block h3{
+    font-family:var(--font-mono);font-size:.9rem;color:var(--accent);
+    margin-bottom:.75rem;display:flex;align-items:center;gap:.4rem
+  }
+  .about-block h3 svg{width:15px;height:15px}
+  .about-block p,.about-block li{font-size:.9rem;color:var(--text-muted);margin-bottom:.5rem}
+  .about-block li{display:flex;align-items:flex-start;gap:.5rem;margin-bottom:.4rem}
+  .about-block li::before{content:'›';color:var(--accent);font-family:var(--font-mono);flex-shrink:0}
+  .about-photo{
+    width:100%;aspect-ratio:1/1;max-width:320px;
+    border-radius:var(--radius-lg);
+    border:1px solid var(--border);
+    background:linear-gradient(135deg,var(--accent-dim),transparent 70%),var(--surface);
+    overflow:hidden;position:relative;
+    display:flex;align-items:center;justify-content:center;
+    margin:0 auto;
+  }
+  .about-photo img{width:100%;height:100%;object-fit:cover}
+  .about-photo .photo-placeholder{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:.5rem;color:var(--text-muted);
+    font-family:var(--font-mono);font-size:.68rem;
+    letter-spacing:.06em;text-transform:uppercase;text-align:center;padding:1rem
+  }
+  .about-photo .photo-placeholder svg{width:32px;height:32px;opacity:.5;color:var(--accent)}
+  .about-photo-caption{
+    font-family:var(--font-mono);font-size:.68rem;
+    color:var(--text-muted);text-align:center;margin-top:.6rem;opacity:.75
+  }
+  .skills-groups{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1rem;margin-top:1.5rem}
+  .skill-group{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:var(--radius-lg);padding:1rem
+  }
+  .skill-group h4{
+    font-family:var(--font-mono);font-size:.8rem;color:var(--accent);
+    margin-bottom:.6rem;display:flex;align-items:center;gap:.35rem
+  }
+  .skill-group h4 svg{width:13px;height:13px}
+  .skill-group ul li{font-size:.82rem;color:var(--text-muted);padding:.2rem 0}
+
+  /* ========== AI CARDS ========== */
+  .ai-cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1rem}
+  .ai-card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:var(--radius-lg);padding:1.25rem;transition:border-color var(--transition)
+  }
+  .ai-card:hover{border-color:var(--border-accent)}
+  .ai-card .icon-wrap{
+    width:38px;height:38px;display:flex;align-items:center;justify-content:center;
+    border-radius:var(--radius);background:var(--accent-dim);
+    color:var(--accent);margin-bottom:.85rem
+  }
+  .ai-card .icon-wrap svg{width:18px;height:18px}
+  .ai-card h3{font-family:var(--font-mono);font-size:.9rem;margin-bottom:.4rem}
+  .ai-card p{font-size:.82rem;color:var(--text-muted);line-height:1.55}
+  .ai-card .ai-meta{margin-top:.75rem;display:flex;flex-wrap:wrap;gap:.35rem}
+
+  /* ========== CERTS ========== */
+  .cert-card{
+    display:flex;flex-direction:column;
+    background:var(--card);border:1px solid var(--border);
+    border-radius:var(--radius-lg);overflow:hidden;
+    transition:border-color var(--transition);position:relative
+  }
+  .cert-card:hover{border-color:var(--border-accent)}
+  .cert-media{
+    position:relative;width:100%;aspect-ratio:4/3;
+    background:linear-gradient(135deg,var(--accent-dim),transparent 70%),var(--surface);
+    border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+  }
+  .cert-media img{
+    width:100%;height:100%;object-fit:contain;
+    padding:.65rem;background:transparent;display:block;
+    transition:transform .25s ease;
+  }
+  .cert-media .cert-media-placeholder{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:.45rem;color:var(--text-muted);
+    font-family:var(--font-mono);font-size:.68rem;
+    letter-spacing:.08em;text-transform:uppercase;
+    text-align:center;padding:1rem;
+  }
+  .cert-media .cert-media-placeholder svg{width:26px;height:26px;opacity:.55}
+  .cert-media.is-missing{border-bottom:1px dashed var(--border)}
+  .cert-media.is-clickable{cursor:zoom-in}
+  .cert-media.is-clickable:hover img{transform:scale(1.01)}
+  .cert-body{
+    display:flex;flex-direction:column;gap:.5rem;
+    padding:1rem 1.15rem 1.15rem;flex:1;
+  }
+  .cert-title{
+    font-family:var(--font-mono);font-size:.92rem;font-weight:600;
+    color:var(--text);margin:0;line-height:1.35;
+  }
+  .cert-issuer{font-size:.8rem;color:var(--text-muted);line-height:1.4}
+  .cert-date{
+    font-family:var(--font-mono);font-size:.68rem;
+    color:var(--text-muted);opacity:.75;letter-spacing:.04em;
+  }
+  .cert-row{
+    display:flex;align-items:center;justify-content:space-between;
+    gap:.5rem;flex-wrap:wrap;margin-top:.1rem;
+  }
+  .cert-actions{
+    margin-top:.6rem;display:flex;gap:.4rem;flex-wrap:wrap;
+    padding-top:.75rem;border-top:1px solid var(--border);
+  }
+  .cert-row .status-badge{padding:.2rem .55rem;font-size:.62rem}
+
+  /* Lightbox */
+  .cert-lightbox{
+    position:fixed;inset:0;z-index:9999;
+    background:rgba(0,0,0,.85);
+    backdrop-filter:blur(8px);-webkit-backdrop-filter:blur(8px);
+    display:flex;align-items:center;justify-content:center;
+    padding:2rem 1.25rem;
+  }
+  .cert-lightbox-img{
+    max-width:min(1100px,95vw);max-height:88vh;
+    width:auto;height:auto;object-fit:contain;
+    background:var(--bg);border:1px solid var(--border);
+    border-radius:var(--radius-lg);
+    box-shadow:0 20px 60px rgba(0,0,0,.6);display:block;
+  }
+  .cert-lightbox-close{
+    position:absolute;top:1.1rem;right:1.1rem;
+    width:40px;height:40px;
+    display:inline-flex;align-items:center;justify-content:center;
+    border-radius:50%;border:1px solid var(--border);
+    background:var(--card);color:var(--text-muted);
+    cursor:pointer;transition:all var(--transition);
+  }
+  .cert-lightbox-close:hover{
+    color:var(--accent);border-color:var(--border-accent);background:var(--accent-dim);
+  }
+  .cert-lightbox-close svg{width:18px;height:18px}
+
+  /* ========== EMPTY STATE ========== */
+  .empty-state{
+    text-align:center;padding:2.5rem 1.5rem;color:var(--text-muted);
+    border:1px dashed var(--border);border-radius:var(--radius-lg)
+  }
+  .empty-state svg{margin:0 auto .75rem;opacity:.5;width:28px;height:28px}
+  .empty-state p{font-size:.9rem;margin-bottom:.4rem}
+  .empty-state .hint{font-size:.78rem;opacity:.75}
+
+  /* ========== PROJECTS ========== */
+  .projects-toolbar{
+    display:flex;flex-wrap:wrap;gap:.4rem;
+    margin-bottom:1.25rem;padding:.4rem;
+    border:1px solid var(--border);border-radius:100px;
+    background:rgba(255,255,255,.015);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    width:fit-content;max-width:100%;
+  }
+  .projects-filter{
+    font-family:var(--font-mono);font-size:.72rem;font-weight:500;
+    letter-spacing:.04em;text-transform:uppercase;
+    padding:.4rem .85rem;border-radius:100px;border:1px solid transparent;
+    color:var(--text-muted);transition:all var(--transition);
+    display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap;
+  }
+  .projects-filter:hover{color:var(--text);background:var(--accent-dim)}
+  .projects-filter.active{color:var(--accent);background:var(--accent-dim);border-color:var(--border-accent)}
+  .projects-filter .count{font-size:.62rem;opacity:.7;padding:0 .3rem;border-radius:6px;background:rgba(255,255,255,.05)}
+
+  .project-card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:var(--radius-lg);overflow:hidden;
+    transition:border-color var(--transition), transform var(--transition);
+    display:flex;flex-direction:column;position:relative
+  }
+  .project-card:hover{border-color:var(--border-accent);transform:translateY(-2px)}
+  .project-card .project-status{position:absolute;top:.85rem;left:.85rem;z-index:2}
+  .project-img{
+    width:100%;height:150px;background:var(--surface);
+    border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;
+    color:var(--text-muted);font-family:var(--font-mono);font-size:.72rem;
+    position:relative;overflow:hidden
+  }
+  .project-img img{width:100%;height:100%;object-fit:cover}
+  .project-img .ph{display:flex;flex-direction:column;align-items:center;gap:.4rem;opacity:.65}
+  .project-img .ph svg{width:22px;height:22px}
+  .project-body{padding:1rem;flex:1;display:flex;flex-direction:column}
+  .project-body h3{font-family:var(--font-mono);font-size:.9rem;margin-bottom:.4rem}
+  .project-body p{font-size:.82rem;color:var(--text-muted);line-height:1.55;margin-bottom:.5rem;flex:1}
+  .project-actions{margin-top:.75rem;display:flex;gap:.4rem;flex-wrap:wrap}
+  .project-actions .btn.is-disabled{opacity:.45;cursor:not-allowed;pointer-events:none;color:var(--text-muted);border-color:var(--border);background:transparent}
+
+  /* ========== LABS ========== */
+  .labs-controls{display:flex;flex-wrap:wrap;gap:.75rem;margin-bottom:1.25rem;align-items:center}
+  .search-input{
+    flex:1;min-width:180px;padding:.55rem .85rem;
+    background:var(--surface);border:1px solid var(--border);
+    border-radius:var(--radius);color:var(--text);
+    font-family:var(--font-mono);font-size:.85rem
+  }
+  .search-input::placeholder{color:var(--text-muted)}
+  .filter-select{
+    padding:.55rem .85rem;background:var(--surface);
+    border:1px solid var(--border);border-radius:var(--radius);
+    color:var(--text);font-family:var(--font-mono);font-size:.8rem;cursor:pointer
+  }
+  .labs-status-toolbar{
+    display:flex;flex-wrap:wrap;gap:.4rem;
+    margin-bottom:1.5rem;padding:.4rem;
+    border:1px solid var(--border);border-radius:100px;
+    background:rgba(255,255,255,.015);
+    backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);
+    width:fit-content;max-width:100%;
+  }
+  .labs-status-filter{
+    font-family:var(--font-mono);font-size:.72rem;font-weight:500;
+    letter-spacing:.04em;text-transform:uppercase;
+    padding:.4rem .85rem;border-radius:100px;border:1px solid transparent;
+    color:var(--text-muted);transition:all var(--transition);
+    display:inline-flex;align-items:center;gap:.4rem;white-space:nowrap;
+  }
+  .labs-status-filter:hover{color:var(--text);background:var(--accent-dim)}
+  .labs-status-filter.active{color:var(--accent);background:var(--accent-dim);border-color:var(--border-accent)}
+  .labs-status-filter .count{font-size:.62rem;opacity:.7;padding:0 .3rem;border-radius:6px;background:rgba(255,255,255,.05)}
+
+  .lab-category{margin-bottom:2rem}
+  .lab-category h3{
+    font-family:var(--font-mono);font-size:.92rem;color:var(--accent);
+    margin-bottom:.85rem;display:flex;align-items:center;gap:.4rem;
+    padding-bottom:.4rem;border-bottom:1px solid var(--border)
+  }
+  .lab-category h3 svg{width:14px;height:14px}
+
+  .lab-card{
+    background:var(--card);border:1px solid var(--border);
+    border-radius:var(--radius-lg);overflow:hidden;
+    transition:border-color var(--transition), transform var(--transition);
+    display:flex;flex-direction:column;
+  }
+  .lab-card:hover{border-color:var(--border-accent);transform:translateY(-2px)}
+
+  .lab-media{
+    position:relative;width:100%;aspect-ratio:16/10;
+    background:linear-gradient(135deg,var(--accent-dim),transparent 70%),var(--surface);
+    border-bottom:1px solid var(--border);
+    display:flex;align-items:center;justify-content:center;overflow:hidden;
+  }
+  .lab-media img{
+    width:100%;height:100%;object-fit:cover;object-position:center;
+    display:block;transition:transform .25s ease;
+  }
+  .lab-media.is-clickable{cursor:zoom-in}
+  .lab-media.is-clickable:hover img{transform:scale(1.02)}
+  .lab-media.is-fallback img{display:none}
+  .lab-media-placeholder{
+    position:absolute;inset:0;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    gap:.55rem;color:var(--text-muted);
+    font-family:var(--font-mono);font-size:.66rem;
+    letter-spacing:.08em;text-transform:uppercase;
+    text-align:center;padding:1rem;
+    background:
+      repeating-linear-gradient(
+        to bottom,
+        rgba(255,255,255,.02) 0px,
+        rgba(255,255,255,.02) 1px,
+        transparent 1px,
+        transparent 3px
+      ),
+      linear-gradient(135deg,var(--accent-dim),transparent 70%),
+      var(--surface);
+  }
+  .lab-media-placeholder svg{width:28px;height:28px;opacity:.55;color:var(--accent)}
+  .lab-media-placeholder .lmp-sub{opacity:.6;font-size:.6rem;letter-spacing:.1em;}
+
+  .lab-media .lab-cat-pill{
+    position:absolute;top:.7rem;left:.7rem;z-index:2;
+    font-family:var(--font-mono);font-size:.62rem;
+    color:var(--accent);letter-spacing:.06em;text-transform:uppercase;
+    padding:.18rem .5rem;border:1px solid var(--border-accent);
+    border-radius:4px;background:rgba(0,0,0,.55);
+    backdrop-filter:blur(6px);-webkit-backdrop-filter:blur(6px);
+  }
+  .lab-media .lab-status-pill{position:absolute;top:.7rem;right:.7rem;z-index:2;}
+
+  .lab-body{
+    display:flex;flex-direction:column;gap:.5rem;
+    padding:1rem 1.15rem 1.15rem;flex:1;
+  }
+  .lab-body h4{
+    font-family:var(--font-mono);font-size:.92rem;font-weight:600;
+    color:var(--text);margin:0;line-height:1.35;
+    display:flex;align-items:center;gap:.5rem;flex-wrap:wrap;
+  }
+  .lab-body .lab-desc{
+    font-size:.82rem;color:var(--text-muted);line-height:1.55;
+    display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;
+    overflow:hidden;
+  }
+  .lab-body .lab-meta{
+    display:flex;align-items:center;gap:.4rem;flex-wrap:wrap;
+    margin-top:.15rem;
+  }
+  .lab-body .lab-difficulty{
+    font-family:var(--font-mono);font-size:.62rem;
+    color:var(--text-muted);letter-spacing:.05em;text-transform:uppercase;
+    padding:.14rem .45rem;border:1px solid var(--border);border-radius:4px;
+  }
+  .lab-body .tags{margin-top:.1rem}
+
+  .lab-card-actions{
+    display:flex;flex-wrap:wrap;gap:.4rem;align-items:center;
+    padding-top:.7rem;margin-top:auto;
+    border-top:1px solid var(--border)
+  }
+  .lab-resource-btn{
+    display:inline-flex;align-items:center;gap:.35rem;
+    font-family:var(--font-mono);font-size:.68rem;font-weight:500;
+    letter-spacing:.03em;text-transform:uppercase;
+    padding:.3rem .6rem;border-radius:var(--radius);
+    border:1px solid var(--border);color:var(--text-muted);
+    background:transparent;transition:all var(--transition);white-space:nowrap
+  }
+  .lab-resource-btn svg{width:11px;height:11px}
+  .lab-resource-btn:hover{color:var(--accent);border-color:var(--border-accent);background:var(--accent-dim)}
+  .lab-resource-btn.primary{color:var(--accent);border-color:var(--border-accent);background:var(--accent-dim)}
+  .lab-resource-btn.primary:hover{background:var(--accent-dim);filter:brightness(1.1)}
+  .lab-resource-btn.disabled{opacity:.4;cursor:not-allowed;pointer-events:none;border-style:dashed}
+  .lab-resource-note{
+    font-family:var(--font-mono);font-size:.62rem;color:var(--text-muted);
+    letter-spacing:.03em;text-transform:uppercase;opacity:.6;
+    display:inline-flex;align-items:center;gap:.3rem;
+    padding:.3rem .55rem;border:1px dashed var(--border);border-radius:var(--radius)
+  }
+
+  /* ========== CONTACT ========== */
+  .contact-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:.75rem}
+  .contact-link{
+    display:flex;align-items:center;gap:.7rem;padding:.85rem 1rem;
+    background:var(--card);border:1px solid var(--border);
+    border-radius:var(--radius-lg);color:var(--text-muted);
+    transition:all var(--transition);font-size:.88rem;
+    min-height:48px;text-decoration:none
+  }
+  .contact-link:hover{border-color:var(--border-accent);color:var(--text);background:var(--accent-dim)}
+  .contact-link .ci-icon{
+    width:20px;height:20px;flex-shrink:0;
+    display:inline-flex;align-items:center;justify-content:center;color:var(--accent)
+  }
+  .contact-link .ci-icon svg{width:20px;height:20px;display:block}
+  .contact-link .ci-label{flex:1;min-width:0}
+  .contact-link.is-placeholder{opacity:.6;cursor:not-allowed;border-style:dashed}
+  .contact-link.is-placeholder:hover{background:var(--card);border-color:var(--border);color:var(--text-muted)}
+  .contact-link .ci-tag{
+    font-family:var(--font-mono);font-size:.66rem;color:var(--text-muted);
+    opacity:.85;margin-left:auto;padding:.1rem .4rem;
+    border:1px dashed var(--border);border-radius:3px;white-space:nowrap
+  }
+
+  /* ========== FOOTER ========== */
+  .footer{border-top:1px solid var(--border);padding:1.5rem 0;margin-top:2rem}
+  .footer-inner{display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem}
+  .footer-brand{font-family:var(--font-mono);font-size:.82rem;color:var(--text-muted)}
+  .footer-brand .accent{color:var(--accent)}
+  .footer-socials{display:flex;gap:.4rem;flex-wrap:wrap}
+  .footer-socials .social-btn{
+    width:38px;height:38px;display:inline-flex;align-items:center;justify-content:center;
+    border-radius:var(--radius);border:1px solid var(--border);
+    color:var(--text-muted);background:transparent;
+    transition:all var(--transition);text-decoration:none
+  }
+  .footer-socials .social-btn svg{width:17px;height:17px;display:block}
+  .footer-socials .social-btn:hover{color:var(--accent);border-color:var(--border-accent);background:var(--accent-dim)}
+  .footer-socials .social-btn.is-placeholder{opacity:.4;cursor:not-allowed;border-style:dashed}
+  .footer-bottom{
+    margin-top:1rem;padding-top:1rem;border-top:1px solid var(--border);
+    display:flex;justify-content:space-between;flex-wrap:wrap;gap:.75rem;
+    font-size:.75rem;color:var(--text-muted);font-family:var(--font-mono)
+  }
+  .footer-bottom .logout-link{
+    display:inline-flex;align-items:center;gap:.35rem;
+    color:var(--text-muted);transition:color var(--transition);cursor:pointer
+  }
+  .footer-bottom .logout-link:hover{color:var(--accent)}
+  .footer-bottom .logout-link svg{width:12px;height:12px}
+
+  /* ========== ACCESS GATE (client-side demo) ========== */
+  .gate{
+    position:fixed;inset:0;z-index:9999;
+    background:#050505;
+    display:flex;align-items:center;justify-content:center;
+    padding:1.5rem;overflow:hidden;
+  }
+  .gate.hidden{display:none}
+  .gate-bg{position:absolute;inset:0;pointer-events:none;overflow:hidden}
+  .gate-grid{
+    position:absolute;inset:-2px;
+    background-image:
+      linear-gradient(rgba(255,45,45,.06) 1px,transparent 1px),
+      linear-gradient(90deg,rgba(255,45,45,.05) 1px,transparent 1px);
+    background-size:32px 32px,32px 32px;
+    mask-image:radial-gradient(circle at 50% 45%,#000 20%,transparent 78%);
+    -webkit-mask-image:radial-gradient(circle at 50% 45%,#000 20%,transparent 78%);
+  }
+  .gate-scanlines{
+    position:absolute;inset:0;
+    background:repeating-linear-gradient(
+      to bottom,
+      rgba(255,255,255,.015) 0px,
+      rgba(255,255,255,.015) 1px,
+      transparent 1px,
+      transparent 3px
+    );
+    mix-blend-mode:overlay;opacity:.6;
+  }
+  .gate-vignette{
+    position:absolute;inset:0;
+    background:
+      radial-gradient(circle at 50% 50%,transparent 40%,rgba(0,0,0,.7) 100%),
+      linear-gradient(180deg,rgba(0,0,0,.6),transparent 30%,transparent 70%,rgba(0,0,0,.7));
+  }
+  .gate-card{
+    position:relative;z-index:2;
+    width:100%;max-width:440px;
+    background:linear-gradient(180deg,#141414,#0a0a0a);
+    border:1px solid rgba(255,45,45,.2);
+    border-radius:var(--radius-lg);
+    padding:2rem 1.75rem 1.5rem;
+    box-shadow:
+      0 0 0 1px rgba(0,0,0,.5),
+      0 24px 60px rgba(0,0,0,.7),
+      0 0 60px rgba(255,45,45,.08);
+    backdrop-filter:blur(10px);
+    -webkit-backdrop-filter:blur(10px);
+  }
+  .gate-card::before{
+    content:'';position:absolute;top:0;left:1.5rem;right:1.5rem;height:1px;
+    background:linear-gradient(90deg,transparent,rgba(255,45,45,.8),transparent);
+    opacity:.7;
+  }
+  .gate-brand{
+    display:flex;align-items:center;gap:.6rem;
+    margin-bottom:1.4rem;justify-content:center;
+  }
+  .gate-brand-mark{
+    width:32px;height:32px;
+    display:inline-flex;align-items:center;justify-content:center;
+    border:1px solid rgba(255,45,45,.4);
+    border-radius:6px;
+    background:rgba(255,45,45,.08);
+    color:#ff2d2d;
+    overflow:hidden;flex-shrink:0;
+  }
+  .gate-brand-mark img{width:100%;height:100%;object-fit:cover}
+  .gate-brand-mark svg{width:16px;height:16px}
+  .gate-brand-name{
+    font-family:var(--font-mono);
+    font-weight:700;font-size:1.2rem;letter-spacing:.16em;
+    color:#f5f5f5;
+  }
+  .gate-brand-sub{
+    font-family:var(--font-mono);
+    font-size:.72rem;color:#9a9a9a;opacity:.75;margin-left:.2rem;
+  }
+  .gate-status{
+    display:flex;flex-direction:column;gap:.4rem;
+    font-family:var(--font-mono);font-size:.68rem;
+    padding:.75rem .85rem;
+    border:1px solid #1f1f1f;
+    border-left:2px solid rgba(255,45,45,.6);
+    background:rgba(0,0,0,.4);
+    border-radius:5px;
+    margin-bottom:1.4rem;
+    letter-spacing:.06em;
+    color:#b0b0b0;
+  }
+  .gate-status-row{display:flex;align-items:center;gap:.55rem}
+  .gate-status-dot{
+    width:6px;height:6px;border-radius:50%;
+    background:#ff2d2d;
+    box-shadow:0 0 8px rgba(255,45,45,.9);
+    animation:gatePulse 1.6s ease-in-out infinite;
+  }
+  @keyframes gatePulse{0%,100%{opacity:1}50%{opacity:.35}}
+  .gate-status-key{color:#7a7a7a;opacity:.85}
+  .gate-status-val{margin-left:auto;color:#ff2d2d;font-weight:600}
+  .gate-prompt{
+    display:block;
+    font-family:var(--font-mono);font-size:.78rem;
+    color:#8a8a8a;
+    margin-bottom:.5rem;
+    letter-spacing:.02em;
+  }
+  .gate-prompt-user{color:#ff2d2d}
+  .gate-prompt-dollar{color:#8a8a8a;margin:0 .3rem}
+  .gate-prompt-cmd{color:#e8e8e8}
+  .gate-input-wrap{position:relative;margin-bottom:.6rem}
+  .gate-input-wrap input{
+    width:100%;
+    padding:.85rem 2.75rem .85rem 1rem;
+    background:#080808;
+    border:1px solid rgba(255,45,45,.25);
+    border-radius:6px;
+    color:#f5f5f5;
+    font-family:var(--font-mono);
+    font-size:.92rem;
+    letter-spacing:.06em;
+    transition:border-color var(--transition),box-shadow var(--transition);
+  }
+  .gate-input-wrap input::placeholder{color:#6a6a6a;opacity:.7;letter-spacing:.04em}
+  .gate-input-wrap input:focus{
+    outline:none;
+    border-color:rgba(255,45,45,.75);
+    box-shadow:0 0 0 3px rgba(255,45,45,.10),0 0 24px rgba(255,45,45,.15);
+  }
+  .gate-toggle{
+    position:absolute;right:.5rem;top:50%;transform:translateY(-50%);
+    width:32px;height:32px;
+    display:inline-flex;align-items:center;justify-content:center;
+    color:#8a8a8a;border-radius:4px;
+    transition:all var(--transition);
+  }
+  .gate-toggle:hover{color:#ff2d2d;background:rgba(255,45,45,.08)}
+  .gate-toggle svg{width:16px;height:16px}
+  .gate-error{
+    display:none;
+    align-items:center;gap:.4rem;
+    font-family:var(--font-mono);font-size:.72rem;
+    color:#ff5555;
+    margin:.35rem 0 .5rem;
+    padding:.45rem .65rem;
+    border:1px solid rgba(255,45,45,.25);
+    background:rgba(255,45,45,.06);
+    border-radius:4px;
+    letter-spacing:.03em;
+  }
+  .gate-error.show{display:flex;animation:gateShake .28s ease}
+  .gate-err-mark{
+    display:inline-flex;align-items:center;justify-content:center;
+    width:16px;height:16px;border-radius:50%;
+    background:rgba(255,45,45,.18);color:#ff5555;
+    font-size:.7rem;font-weight:700;
+  }
+  @keyframes gateShake{
+    0%,100%{transform:translateX(0)}
+    25%{transform:translateX(-3px)}
+    75%{transform:translateX(3px)}
+  }
+  .gate-submit{
+    width:100%;
+    display:flex;align-items:center;justify-content:space-between;
+    gap:.6rem;
+    padding:.85rem 1.1rem;
+    font-family:var(--font-mono);
+    font-size:.82rem;font-weight:600;letter-spacing:.14em;
+    color:#f5f5f5;
+    background:linear-gradient(180deg,#ff2d2d,#c81010);
+    border:1px solid #ff2d2d;
+    border-radius:6px;
+    cursor:pointer;
+    transition:all var(--transition);
+    box-shadow:0 6px 20px rgba(255,45,45,.25);
+  }
+  .gate-submit:hover{filter:brightness(1.08);box-shadow:0 8px 26px rgba(255,45,45,.35)}
+  .gate-submit:active{transform:translateY(1px)}
+  .gate-submit:disabled{opacity:.55;cursor:not-allowed}
+  .gate-submit-arrow svg{width:16px;height:16px}
+  .gate-whatsapp{
+    display:flex;align-items:center;justify-content:center;gap:.45rem;
+    margin-top:1rem;padding:.6rem .9rem;
+    font-family:var(--font-mono);font-size:.72rem;letter-spacing:.04em;
+    color:#9a9a9a;text-transform:uppercase;
+    border:1px dashed rgba(255,255,255,.1);border-radius:6px;
+    background:rgba(255,255,255,.015);
+    transition:all var(--transition);
+  }
+  .gate-whatsapp:hover{color:#f5f5f5;border-color:rgba(255,45,45,.35);background:rgba(255,45,45,.05)}
+  .gate-whatsapp svg{width:13px;height:13px}
+  .gate-note{
+    margin-top:1.25rem;
+    padding:.7rem .8rem;
+    background:rgba(255,255,255,.015);
+    border:1px solid #1f1f1f;
+    border-radius:5px;
+    font-size:.66rem;
+    color:#8a8a8a;
+    line-height:1.55;
+    font-family:var(--font-mono);
+    letter-spacing:.01em;
+  }
+  .gate-note strong{color:#e8e8e8}
+  .gate-note code{background:rgba(0,0,0,.4);padding:.05rem .3rem;border-radius:3px;color:#ff8a8a}
+
+  /* ========== MAIN ========== */
+  .main-content{min-height:calc(100vh - 60px - 100px)}
+  .main-content.hidden{display:none}
+
+  /* ========== RESPONSIVE ========== */
+  @media (max-width:880px){
+    .nav{display:none}
+    .mobile-toggle{display:flex}
+    .hero{grid-template-columns:1fr;gap:1.75rem;padding:2rem 0 1.5rem}
+    .about-grid{grid-template-columns:1fr}
+    .about-right{order:-1}
+  }
+  @media (max-width:520px){
+    .container{padding:0 1rem}
+    .section{padding:2.5rem 0}
+    .card-grid,.ai-cards,.contact-grid{grid-template-columns:1fr}
+    .labs-controls{flex-direction:column;align-items:stretch}
+    .search-input,.filter-select{width:100%}
+    .hero-ctas .btn{flex:1 1 auto;justify-content:center}
+    .hire-btn span.hire-label{display:none}
+    .hire-btn{padding:.45rem .55rem}
+    .contact-link{min-height:52px;padding:.9rem 1rem}
+    .footer-socials .social-btn{width:42px;height:42px}
+    .footer-socials .social-btn svg{width:19px;height:19px}
+    .projects-toolbar,.labs-status-toolbar{border-radius:var(--radius-lg);width:100%}
+    .cert-media{aspect-ratio:1/1}
+    .lab-media{aspect-ratio:4/3}
+    .gate-card{padding:1.5rem 1.25rem 1.25rem}
+    .gate-brand-name{font-size:1rem}
+  }
+</style>
+</head>
+<body>
+
+<!-- ============ LOADER ============ -->
+<div class="loader" id="loader" aria-hidden="true">
+  <div class="loader-inner">
+    <div class="loader-logo">DREXON</div>
+    <div class="loader-bar"><div class="loader-bar-fill"></div></div>
+    <div class="loader-line">[ BOOT ] initializing secure shell...</div>
+    <div class="loader-line">[ OK ] loading cipher suite</div>
+    <div class="loader-line">[ OK ] mounting portfolio</div>
+    <div class="loader-line">[ READY ]</div>
+  </div>
+</div>
+
+<!-- ============ ACCESS GATE (client-side demo) ============ -->
+<div class="gate hidden" id="gate" role="dialog" aria-modal="true" aria-labelledby="gateTitle">
+
+  <div class="gate-bg" aria-hidden="true">
+    <div class="gate-grid"></div>
+    <div class="gate-scanlines"></div>
+    <div class="gate-vignette"></div>
+  </div>
+
+  <div class="gate-card">
+    <div class="gate-brand" id="gateTitle">
+      <span class="gate-brand-mark" aria-hidden="true">
+        <img src="assets/images/WhatsApp Image 2026-10-11 at 1.25.41 PM.jpeg" alt="DREXON"
+             onerror="this.style.display='none';this.parentElement.innerHTML='<svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2.2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;><polyline points=&quot;4 17 10 11 4 5&quot;/><line x1=&quot;12&quot; y1=&quot;19&quot; x2=&quot;20&quot; y2=&quot;19&quot;/></svg>';">
+      </span>
+      <span class="gate-brand-name">DREXON</span>
+    </div>
+
+    <div class="gate-status" aria-live="polite">
+      <div class="gate-status-row">
+        <span class="gate-status-dot" aria-hidden="true"></span>
+        <span class="gate-status-key">SYSTEM STATUS</span>
+        <span class="gate-status-val" id="gateStatusVal">LOCKED</span>
+      </div>
+    </div>
+
+    <form id="gateForm" novalidate autocomplete="off">
+      <label class="gate-prompt" for="gatePass">
+        <span class="gate-prompt-user">drexon@system</span><span class="gate-prompt-dollar">$</span>
+        <span class="gate-prompt-cmd">authenticate --user</span>
+      </label>
+
+      <div class="gate-input-wrap">
+        <input type="password" id="gatePass" name="passcode" autocomplete="off"
+               inputmode="text" spellcheck="false" autocapitalize="off"
+               placeholder="enter access phrase"
+               aria-describedby="gateError" aria-label="Access passphrase">
+        <button type="button" class="gate-toggle" id="gateToggle" aria-label="Show passphrase">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>
+        </button>
+      </div>
+
+      <div class="gate-error" id="gateError" role="alert">
+        <span class="gate-err-mark">!</span>
+        <span>Access denied — invalid passphrase</span>
+      </div>
+
+      <button type="submit" class="gate-submit" id="gateSubmit">
+        <span>UNLOCK</span>
+        <span class="gate-submit-arrow" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
+        </span>
+      </button>
+    </form>
+
+    <a class="gate-whatsapp"
+       href="https://wa.me/255624222544?text=Welcome%20to%20the%20dr3x0n%20portfolio.%20I%20would%20like%20to%20request%20access%20to%20the%20portfolio."
+       target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M.06 24l1.68-6.13A11.86 11.86 0 0 1 .14 11.9C.14 5.34 5.48 0 12.04 0a11.85 11.85 0 0 1 8.42 3.49 11.85 11.85 0 0 1 3.49 8.43c0 6.55-5.34 11.89-11.9 11.89a11.9 11.9 0 0 1-5.7-1.45L.06 24Zm6.6-3.8c1.68.99 3.28 1.59 5.38 1.59 5.44 0 9.87-4.43 9.87-9.88 0-5.45-4.43-9.87-9.87-9.87-5.45 0-9.88 4.42-9.88 9.87 0 2.2.65 3.86 1.75 5.6l-1 3.63 3.75-.94Z"/></svg>
+      Request Passcode on WhatsApp
+    </a>
+  </div>
+
+</div>
+
+<!-- ============ MAIN PORTFOLIO ============ -->
+<div class="main-content hidden" id="mainContent">
+
+  <!-- HEADER -->
+  <header class="header">
+    <div class="container header-inner">
+      <a href="#" class="logo" data-nav="home" aria-label="DREXON home">
+        <span class="logo-mark" aria-hidden="true">
+          <img src="assets/images/WhatsApp Image 2026-10-11 at 1.25.41 PM.jpeg" alt=""
+               onerror="this.style.display='none';this.parentElement.innerHTML='<svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2.2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;><polyline points=&quot;4 17 10 11 4 5&quot;/><line x1=&quot;12&quot; y1=&quot;19&quot; x2=&quot;20&quot; y2=&quot;19&quot;/></svg>';">
+        </span>
+        DREXON<span class="logo-sub">/derek</span>
+      </a>
+
+      <nav class="nav" role="navigation" aria-label="Primary">
+        <a href="#" class="nav-link active" data-nav="home">HOME</a>
+        <a href="#" class="nav-link" data-nav="about">ABOUT</a>
+        <a href="#" class="nav-link" data-nav="ai">AI</a>
+        <a href="#" class="nav-link" data-nav="certs">CERTS</a>
+        <a href="#" class="nav-link" data-nav="labs">LABS</a>
+        <a href="#" class="nav-link" data-nav="contact">CONTACT</a>
+      </nav>
+
+      <div class="header-actions">
+        <div class="theme-wrap">
+          <button class="theme-btn" id="themeBtn" aria-label="Change theme" aria-haspopup="menu" aria-expanded="false" title="Theme">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="13.5" cy="6.5" r=".5"/><circle cx="17.5" cy="10.5" r=".5"/><circle cx="8.5" cy="7.5" r=".5"/><circle cx="6.5" cy="12.5" r=".5"/><path d="M12 2C6.5 2 2 6.5 2 12s4.5 10 10 10c.926 0 1.648-.746 1.648-1.688 0-.437-.18-.835-.437-1.125-.29-.289-.438-.652-.438-1.125a1.64 1.64 0 0 1 1.668-1.668h1.996c3.051 0 5.555-2.503 5.555-5.554C21.965 6.012 17.461 2 12 2z"/></svg>
+          </button>
+          <div class="theme-menu" id="themeMenu" role="menu" aria-label="Theme selector">
+            <button class="theme-option active" data-theme="orange" role="menuitem">
+              <span class="theme-dot orange"></span> Orange Terminal
+            </button>
+            <button class="theme-option" data-theme="blue" role="menuitem">
+              <span class="theme-dot blue"></span> Black &amp; Blue
+            </button>
+            <button class="theme-option" data-theme="lime" role="menuitem">
+              <span class="theme-dot lime"></span> Synthetic Lime
+            </button>
+          </div>
+        </div>
+
+        <button class="hire-btn hire-pulse" id="hireTop" aria-label="Hire me — download CV">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M16 20V4a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/><rect width="20" height="14" x="2" y="6" rx="2"/></svg>
+          <span class="hire-label">Hire Me</span>
+        </button>
+
+        <button class="mobile-toggle" id="mobileToggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobileNav">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="4" y1="6" x2="20" y2="6"/><line x1="4" y1="12" x2="20" y2="12"/><line x1="4" y1="18" x2="20" y2="18"/></svg>
+        </button>
+      </div>
+    </div>
+
+    <div class="mobile-nav" id="mobileNav">
+      <a href="#" class="nav-link active" data-nav="home">HOME</a>
+      <a href="#" class="nav-link" data-nav="about">ABOUT</a>
+      <a href="#" class="nav-link" data-nav="ai">AI</a>
+      <a href="#" class="nav-link" data-nav="certs">CERTS</a>
+      <a href="#" class="nav-link" data-nav="labs">LABS</a>
+      <a href="#" class="nav-link" data-nav="contact">CONTACT</a>
+    </div>
+  </header>
+
+  <!-- HOME -->
+  <section class="section active" id="section-home">
+    <div class="container">
+      <div class="hero">
+        <div class="hero-content">
+          <span class="hero-eyebrow">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+            Computer Engineering · Cybersecurity
+          </span>
+          <h1>Engineering systems.<br>Exploring <span class="accent">security</span>.<br>Building with purpose.</h1>
+          <p class="hero-name">DEREK JOHNSON ELVIS — DREXON</p>
+          <p class="subtitle">Computer Engineering Student | Cybersecurity | AI &amp; Automation</p>
+          <p class="intro">
+            I'm a Computer Engineering student focused on practical cybersecurity,
+            software development, and AI-assisted automation. I learn by building
+            labs, writing small tools, and documenting what I test in authorized
+            environments. My goal is to grow into a security engineer who writes
+            clear reports and ships maintainable code.
+          </p>
+          <div class="hero-ctas">
+            <button class="btn btn-primary" data-nav="labs">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M10 2v7.31"/><path d="M14 9.3V2"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.58 16.5h12.85"/></svg>
+              Explore Labs
+            </button>
+            <button class="btn btn-outline" id="viewProjectsBtn">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg>
+              View Projects
+            </button>
+            <button class="btn btn-ghost" data-nav="contact">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+              Contact Me
+            </button>
+            <button class="btn btn-primary hire-pulse" id="hireHero">
+              <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+              Download CV
+            </button>
+          </div>
+          <div class="interests">
+            <span class="interest-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg> Cybersecurity</span>
+            <span class="interest-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="4 17 10 11 4 5"/><line x1="12" y1="19" x2="20" y2="19"/></svg> Pentesting</span>
+            <span class="interest-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg> Development</span>
+            <span class="interest-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/></svg> AI &amp; Automation</span>
+            <span class="interest-item"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/></svg> Networking</span>
+          </div>
+        </div>
+
+        <div class="terminal" aria-label="Terminal preview">
+          <div class="terminal-bar">
+            <span class="terminal-dot r"></span>
+            <span class="terminal-dot y"></span>
+            <span class="terminal-dot g"></span>
+            <span class="terminal-title">root@drexon:~</span>
+          </div>
+          <div class="terminal-body">
+            <div class="terminal-line"><span class="terminal-prompt">$</span> <span class="terminal-cmd">whoami</span></div>
+            <div class="terminal-line terminal-out">root@dr3x0n</div>
+            <div class="terminal-line"><span class="terminal-prompt">$</span> <span class="terminal-cmd">cat focus.txt</span></div>
+            <div class="terminal-line terminal-out">Cybersecurity</div>
+            <div class="terminal-line terminal-out">Computer Engineering</div>
+            <div class="terminal-line terminal-out">AI &amp; Automation</div>
+            <div class="terminal-line terminal-out">Software Development</div>
+            <div class="terminal-line"><span class="terminal-prompt">$</span> <span class="terminal-cmd">cat objective.txt</span></div>
+            <div class="terminal-line terminal-out">Learn. Build. Test. Document. Improve.</div>
+            <div class="terminal-line"><span class="terminal-prompt">$</span> <span class="terminal-cmd"><span class="terminal-cursor"></span></span></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- FEATURED PROJECTS -->
+      <div id="projects-anchor" style="margin-top:2.5rem;">
+        <h2 class="section-title"><span class="prompt">$</span> featured projects</h2>
+        <p class="section-desc">Selected work with status badges. Filter by stage.</p>
+
+        <div class="projects-toolbar" id="projectsToolbar" role="tablist" aria-label="Filter projects">
+          <button class="projects-filter active" data-filter="all" role="tab" aria-selected="true">
+            All <span class="count" data-count="all">0</span>
+          </button>
+          <button class="projects-filter" data-filter="live" role="tab" aria-selected="false">
+            Live <span class="count" data-count="live">0</span>
+          </button>
+          <button class="projects-filter" data-filter="progress" role="tab" aria-selected="false">
+            In Progress <span class="count" data-count="progress">0</span>
+          </button>
+          <button class="projects-filter" data-filter="planned" role="tab" aria-selected="false">
+            Planned <span class="count" data-count="planned">0</span>
+          </button>
+          <button class="projects-filter" data-filter="completed" role="tab" aria-selected="false">
+            Completed <span class="count" data-count="completed">0</span>
+          </button>
+        </div>
+
+        <div class="card-grid" id="projectsGrid"></div>
+      </div>
+
+      <!-- FEATURED LABS -->
+      <div style="margin-top:2.75rem;">
+        <h2 class="section-title"><span class="prompt">$</span> featured labs</h2>
+        <p class="section-desc">Home Labs and Platform Labs. Click any image to enlarge it.</p>
+        <div id="featuredLabs"></div>
+        <div style="margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap;">
+          <button class="btn btn-outline" data-nav="labs">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M5 12h14"/><path d="m12 5 7 7-7 7"/></svg>
+            View all labs
+          </button>
+          <a class="btn btn-ghost" id="downloadGuideBtn" href="assets/images/DREXON_CYBER_LAB_Personal_Cyber_Range (4).pptx" download>
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+            Download Home Lab Guide
+          </a>
+        </div>
+      </div>
+
+      <!-- TECHNICAL FOCUS -->
+      <div style="margin-top:2.75rem;">
+        <h2 class="section-title"><span class="prompt">$</span> technical focus</h2>
+        <p class="section-desc">Areas I actively study and practice.</p>
+        <div class="skills-groups" id="focusGrid"></div>
+      </div>
+
+      <!-- CONTACT PREVIEW -->
+      <div style="margin-top:2.75rem;">
+        <h2 class="section-title"><span class="prompt">$</span> contact</h2>
+        <p class="section-desc">Open to internships, junior security roles, and collaborative projects.</p>
+        <div class="contact-grid" id="homeContact"></div>
+        <div style="margin-top:1rem;display:flex;gap:.5rem;flex-wrap:wrap;">
+          <button class="btn btn-primary" data-nav="contact">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+            Contact Me
+          </button>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ABOUT -->
+  <section class="section" id="section-about">
+    <div class="container">
+      <h2 class="section-title"><span class="prompt">$</span> about</h2>
+      <p class="section-desc">Background, learning approach, and technical direction.</p>
+
+      <div class="about-grid">
+        <div class="about-left">
+          <div class="card about-block">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/></svg> Introduction</h3>
+            <p>I'm a Computer Engineering student with a strong interest in cybersecurity, penetration testing, software development, and AI-assisted automation. I focus on hands-on labs, networking fundamentals, systems, and application security.</p>
+            <p>I prefer to learn by building small, well-scoped projects, documenting what I test, and improving my workflow with AI tools where they genuinely help.</p>
+          </div>
+
+          <div class="card about-block">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 10v6M2 10l10-5 10 5-10 5z"/><path d="M6 12v5c3 3 9 3 12 0v-5"/></svg> Education</h3>
+            <p><strong style="color:var(--text)">Computer Engineering</strong></p>
+            <p>Dar es Salaam Institute of Technology (DIT)</p>
+            <p>Ongoing studies</p>
+          </div>
+
+          <div class="card about-block">
+            <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg> Goals</h3>
+            <ul>
+              <li>Build a solid foundation in practical penetration testing and secure development</li>
+              <li>Complete structured labs and document findings clearly</li>
+              <li>Pursue internships and collaborative cybersecurity opportunities</li>
+              <li>Contribute to open-source security tooling where possible</li>
+            </ul>
+          </div>
+        </div>
+
+        <div class="about-right">
+          <div class="about-photo">
+            <img src="assets/images/WhatsApp Image 2026-10-11 at 1.25.41 PM.jpeg" alt="Derek Johnson Elvis"
+                 onerror="this.style.display='none';this.parentElement.innerHTML='<div class=&quot;photo-placeholder&quot;><svg viewBox=&quot;0 0 24 24&quot; fill=&quot;none&quot; stroke=&quot;currentColor&quot; stroke-width=&quot;2&quot; stroke-linecap=&quot;round&quot; stroke-linejoin=&quot;round&quot;><path d=&quot;M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2&quot;/><circle cx=&quot;12&quot; cy=&quot;7&quot; r=&quot;4&quot;/></svg><span>Add assets/images/profile.jpg</span></div>';">
+          </div>
+          <p class="about-photo-caption">— Derek Johnson Elvis —</p>
+        </div>
+      </div>
+
+      <h3 style="font-family:var(--font-mono);font-size:.95rem;color:var(--accent);margin:2rem 0 1rem;display:flex;align-items:center;gap:.4rem;">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:15px;height:15px"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+        Technical skills
+      </h3>
+      <p style="font-size:.85rem;color:var(--text-muted);margin-bottom:1rem;">Listed as areas of learning focus — not as claimed expertise.</p>
+      <div class="skills-groups" id="aboutSkills"></div>
+    </div>
+  </section>
+
+  <!-- AI -->
+  <section class="section" id="section-ai">
+    <div class="container">
+      <h2 class="section-title"><span class="prompt">$</span> ai &amp; automation</h2>
+      <p class="section-desc">AI and automation interests and experiments. Each card is labeled by status.</p>
+      <div class="ai-cards" id="aiCards"></div>
+    </div>
+  </section>
+
+  <!-- CERTS -->
+  <section class="section" id="section-certs">
+    <div class="container">
+      <h2 class="section-title"><span class="prompt">$</span> certifications</h2>
+      <p class="section-desc">Confirmed certifications only. Click an image to enlarge it.</p>
+      <div id="certsGrid"></div>
+    </div>
+  </section>
+
+  <!-- LABS -->
+  <section class="section" id="section-labs">
+    <div class="container">
+      <h2 class="section-title"><span class="prompt">$</span> labs</h2>
+      <p class="section-desc">Home Labs and Platform Labs. Five actions per lab, each independent.</p>
+
+      <div class="labs-controls">
+        <input type="search" class="search-input" id="labSearch" placeholder="Search labs..." aria-label="Search labs">
+        <select class="filter-select" id="labCategoryFilter" aria-label="Filter by category">
+          <option value="all">All Categories</option>
+        </select>
+      </div>
+
+      <div class="labs-status-toolbar" id="labsStatusToolbar" role="tablist" aria-label="Filter labs">
+        <button class="labs-status-filter active" data-lfilter="all" role="tab" aria-selected="true">
+          All <span class="count" data-lcount="all">0</span>
+        </button>
+        <button class="labs-status-filter" data-lfilter="platform" role="tab" aria-selected="false">
+          Platform Labs <span class="count" data-lcount="platform">0</span>
+        </button>
+        <button class="labs-status-filter" data-lfilter="home" role="tab" aria-selected="false">
+          Home Labs <span class="count" data-lcount="home">0</span>
+        </button>
+        <button class="labs-status-filter" data-lfilter="completed" role="tab" aria-selected="false">
+          Completed <span class="count" data-lcount="completed">0</span>
+        </button>
+        <button class="labs-status-filter" data-lfilter="progress" role="tab" aria-selected="false">
+          In Progress <span class="count" data-lcount="progress">0</span>
+        </button>
+        <button class="labs-status-filter" data-lfilter="planned" role="tab" aria-selected="false">
+          Planned <span class="count" data-lcount="planned">0</span>
+        </button>
+        <button class="labs-status-filter" data-lfilter="pending" role="tab" aria-selected="false">
+          Pending <span class="count" data-lcount="pending">0</span>
+        </button>
+      </div>
+
+      <div id="labsList"></div>
+    </div>
+  </section>
+
+  <!-- CONTACT -->
+  <section class="section" id="section-contact">
+    <div class="container">
+      <h2 class="section-title"><span class="prompt">$</span> contact</h2>
+      <p class="section-desc">Reach out for internships, junior security roles, or technical collaborations.</p>
+      <div class="contact-grid" id="contactLinks"></div>
+    </div>
+  </section>
+
+</div>
+
+<!-- FOOTER -->
+<footer class="footer" id="siteFooter">
+  <div class="container">
+    <div class="footer-inner">
+      <div class="footer-brand"><span class="accent">DREXON</span> / Derek Johnson Elvis · Computer Engineering · Cybersecurity</div>
+      <div class="footer-socials" id="footerSocials"></div>
+    </div>
+    <div class="footer-bottom">
+      <span>© <span id="year"></span> Derek Johnson Elvis (DREXON). All rights reserved.</span>
+      <a href="#" class="logout-link" id="logoutBtn">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+        Logout
+      </a>
+    </div>
+  </div>
+</footer>
+
+<script>
+/* ================================================================
+   BRAND ICONS
+   ================================================================ */
+const ICON = {
+  github:`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 .5C5.73.5.5 5.73.5 12a11.5 11.5 0 0 0 7.86 10.94c.58.11.79-.25.79-.56v-2c-3.2.7-3.88-1.36-3.88-1.36-.53-1.34-1.29-1.7-1.29-1.7-1.05-.72.08-.7.08-.7 1.16.08 1.77 1.19 1.77 1.19 1.03 1.76 2.7 1.25 3.36.96.1-.75.4-1.26.73-1.55-2.55-.29-5.23-1.28-5.23-5.7 0-1.26.45-2.29 1.19-3.1-.12-.29-.52-1.47.11-3.05 0 0 .97-.31 3.18 1.18a11 11 0 0 1 5.79 0c2.2-1.49 3.17-1.18 3.17-1.18.63 1.58.23 2.76.11 3.05.74.81 1.19 1.84 1.19 3.1 0 4.43-2.69 5.4-5.25 5.69.41.36.78 1.06.78 2.14v3.17c0 .31.21.68.8.56A11.5 11.5 0 0 0 23.5 12C23.5 5.73 18.27.5 12 .5Z"/></svg>`,
+  linkedin:`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M20.45 20.45h-3.56v-5.57c0-1.33-.02-3.04-1.85-3.04-1.85 0-2.13 1.45-2.13 2.94v5.67H9.35V9h3.42v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28ZM5.34 7.43a2.07 2.07 0 1 1 0-4.14 2.07 2.07 0 0 1 0 4.14ZM7.12 20.45H3.55V9h3.57v11.45Z"/></svg>`,
+  x:`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M18.9 2H22l-7.4 8.46L23.4 22h-6.93l-5.43-7.1L4.8 22H1.68l7.93-9.06L1.1 2h7.1l4.91 6.5L18.9 2Zm-1.21 18.2h1.9L7.4 3.7H5.36l12.33 16.5Z"/></svg>`,
+  instagram:`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 2.16c3.2 0 3.58.01 4.85.07 1.17.05 1.8.25 2.23.41.56.22.96.48 1.38.9.42.42.68.82.9 1.38.16.42.36 1.06.41 2.23.06 1.27.07 1.65.07 4.85s-.01 3.58-.07 4.85c-.05 1.17-.25 1.8-.41 2.23-.22.56-.48.96-.9 1.38-.42.42-.82.68-1.38.9-.42.16-1.06.36-2.23.41-1.27.06-1.65.07-4.85.07s-3.58-.01-4.85-.07c-1.17-.05-1.8-.25-2.23-.41a3.7 3.7 0 0 1-1.38-.9 3.7 3.7 0 0 1-.9-1.38c-.16-.42-.36-1.06-.41-2.23-.06-1.27-.07-1.65-.07-4.85s.01-3.58.07-4.85c.05-1.17.25-1.8.41-2.23.22-.56.48-.96.9-1.38.42-.42.82-.68 1.38-.9.42-.16 1.06-.36 2.23-.41 1.27-.06 1.65-.07 4.85-.07Zm0-1.66C8.74.5 8.33.51 7.05.57 5.78.63 4.9.83 4.14 1.12a5.4 5.4 0 0 0-1.96 1.28A5.4 5.4 0 0 0 .9 4.36C.61 5.12.41 6 .35 7.27.29 8.55.28 8.96.28 12s.01 3.45.07 4.73c.06 1.27.26 2.15.55 2.91.3.79.71 1.46 1.28 2.03.57.57 1.24.98 2.03 1.28.76.29 1.64.49 2.91.55 1.28.06 1.69.07 4.73.07s3.45-.01 4.73-.07c1.27-.06 2.15-.26 2.91-.55a5.4 5.4 0 0 0 2.03-1.28 5.4 5.4 0 0 0 1.28-2.03c.29-.76.49-1.64.55-2.91.06-1.28.07-1.69.07-4.73s-.01-3.45-.07-4.73c-.06-1.27-.26-2.15-.55-2.91a5.4 5.4 0 0 0-1.28-2.03A5.4 5.4 0 0 0 19.86 1.12C19.1.83 18.22.63 16.95.57 15.67.51 15.26.5 12 .5Zm0 4.18a7.32 7.32 0 1 0 0 14.64 7.32 7.32 0 0 0 0-14.64Zm0 12.07a4.75 4.75 0 1 1 0-9.5 4.75 4.75 0 0 1 0 9.5Zm6.07-12.36a1.71 1.71 0 1 1-3.42 0 1.71 1.71 0 0 1 3.42 0Z"/></svg>`,
+  facebook:`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M22 12a10 10 0 1 0-11.56 9.88v-6.99H7.9V12h2.54V9.8c0-2.5 1.49-3.89 3.78-3.89 1.09 0 2.24.2 2.24.2v2.46h-1.26c-1.24 0-1.63.77-1.63 1.56V12h2.78l-.44 2.89h-2.34v6.99A10 10 0 0 0 22 12Z"/></svg>`,
+  tiktok:`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-5.2 1.74 2.89 2.89 0 0 1 2.31-4.64c.3 0 .58.05.85.13V9.4a6.33 6.33 0 0 0-1-.08A6.34 6.34 0 0 0 5 20.1a6.34 6.34 0 0 0 10.86-4.43V7.9a8.16 8.16 0 0 0 4.77 1.52v-3.4a4.85 4.85 0 0 1-1-.33Z"/></svg>`,
+  reddit:`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M12 0C5.37 0 0 5.37 0 12c0 3.31 1.34 6.31 3.51 8.49l-2.3 2.3A.5.5 0 0 0 1.5 24h21a.5.5 0 0 0 .35-.85l-2.3-2.3A11.94 11.94 0 0 0 24 12c0-6.63-5.37-12-12-12Zm6.5 12.5a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm-9 0a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Zm6.7 4.2a.75.75 0 0 1-.7.5 7.85 7.85 0 0 1-4.5 0 .75.75 0 1 1 .5-1.42 6.35 6.35 0 0 0 3.5 0 .75.75 0 0 1 .7.92ZM18 8.5a1.5 1.5 0 0 0-1.5-1.5 1.5 1.5 0 0 0-1.42 1.03 8.85 8.85 0 0 0-2.16 0 1.5 1.5 0 0 0-2.84 0 1.5 1.5 0 1 0-2.08 2.13A5.4 5.4 0 0 0 9.5 13c1.5.5 3.5.5 5 0a5.4 5.4 0 0 0 1.5-2.84A1.5 1.5 0 0 0 18 8.5Z"/></svg>`,
+  whatsapp:`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M.06 24l1.68-6.13A11.86 11.86 0 0 1 .14 11.9C.14 5.34 5.48 0 12.04 0a11.85 11.85 0 0 1 8.42 3.49 11.85 11.85 0 0 1 3.49 8.43c0 6.55-5.34 11.89-11.9 11.89a11.9 11.9 0 0 1-5.7-1.45L.06 24Zm6.6-3.8c1.68.99 3.28 1.59 5.38 1.59 5.44 0 9.87-4.43 9.87-9.88 0-5.45-4.43-9.87-9.87-9.87-5.45 0-9.88 4.42-9.88 9.87 0 2.2.65 3.86 1.75 5.6l-1 3.63 3.75-.94Z"/></svg>`,
+  telegram:`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M23.9 3.6 20.3 20.6c-.27 1.19-.98 1.48-1.98.92l-5.48-4.04-2.65 2.55c-.3.3-.54.54-1.1.54l.4-5.6L20 4.6c.44-.4-.1-.62-.68-.23L6.34 13.05l-5.4-1.7c-1.18-.37-1.2-1.18.25-1.74L22.3 1.62c.98-.36 1.83.22 1.6 1.98Z"/></svg>`,
+  medium:`<svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" focusable="false"><path d="M13.54 12a6.8 6.8 0 0 1-6.77 6.82A6.8 6.8 0 0 1 0 12a6.8 6.8 0 0 1 6.77-6.82A6.8 6.8 0 0 1 13.54 12zm7.42 0c0 3.54-1.51 6.42-3.38 6.42-1.87 0-3.39-2.88-3.39-6.42s1.52-6.42 3.39-6.42 3.38 2.88 3.38 6.42M24 12c0 3.17-.53 5.75-1.19 5.75-.66 0-1.19-2.58-1.19-5.75s.53-5.75 1.19-5.75S24 8.83 24 12z"/></svg>`,
+  mail:`<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true" focusable="false"><rect width="20" height="16" x="2" y="4" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>`,
+};
+
+/* ================================================================
+   CONTACT — editable
+   Fill `url: ''` to show a placeholder chip instead.
+   ================================================================ */
+const CONTACT = [
+  { id:'github',    label:'GitHub',       icon:'github',    url:'https://github.com/itsdrexonkelvix905' },
+  { id:'linkedin',  label:'LinkedIn',     icon:'linkedin',  url:'https://www.linkedin.com/in/derek-elvis-2813a63b2' },
+  { id:'x',         label:'X / Twitter',  icon:'x',         url:'https://x.com/drexonkelvix905' },
+  { id:'instagram', label:'Instagram',    icon:'instagram', url:'https://www.instagram.com/drexonkelvix/' },
+  { id:'facebook',  label:'Facebook',     icon:'facebook',  url:'https://www.facebook.com/search/top?q=drexon%20kelvix%20TZ' },
+  { id:'tiktok',    label:'TikTok',       icon:'tiktok',    url:'https://www.tiktok.com/@drexonkelvix905' },
+  { id:'reddit',    label:'Reddit',       icon:'reddit',    url:'https://www.reddit.com/u/drexonkelvix905/s/KcAk3k5e4d' },
+  { id:'whatsapp',  label:'WhatsApp',     icon:'whatsapp',  url:'https://wa.me/255624222544' },
+  { id:'telegram',  label:'Telegram',     icon:'telegram',  url:'https://t.me/DREXONCYBERX' },
+  { id:'medium',    label:'Medium',       icon:'medium',    url:'https://medium.com/@drexonkelvix' },
+  { id:'email',     label:'Email',        icon:'mail',      url:'mailto:drexonkelvix@gmail.com' },
+];
+
+/* ================================================================
+   PROJECTS — editable
+   ================================================================ */
+const PROJECTS = [
+  {
+    id: 'ctf-labs',
+    title: 'CTF & CYBER LABS',
+    description: 'A hands-on cybersecurity lab collection for practicing CTF challenges, web application security, network analysis, Linux privilege escalation, API security, digital forensics, and vulnerability assessment in controlled environments.',
+    status: 'IN_PROGRESS',
+    tags: ['Penetration Testing','CTF','Web Security','Networking'],
+    screenshot: '',
+    github: '',
+    live: '',
+    report: ''
+  },
+  {
+    id: 'campus-x',
+    title: 'CAMPUX HUB',
+    description: 'A Tanzania-focused campus platform concept connecting students with academic resources, campus communities, clubs, announcements, job opportunities, and student services.',
+    status: 'PLANNED',
+    tags: ['JavaScript','Web Development','Education','Full Stack'],
+    screenshot: '',
+    github: '',
+    live: '',
+    report: ''
+  },
+  {
+    id: 'hacksec-ai',
+    title: 'HACKSEC AI',
+    description: 'An AI-assisted cybersecurity learning and research platform designed to explain security concepts, organize practical labs, support security investigations, and help generate structured technical reports.',
+    status: 'IN_PROGRESS',
+    tags: ['AI','Cybersecurity','Python','Automation'],
+    screenshot: 'assets/images/img.png',
+    github: 'https://github.com/itsdrexonkelvix905/HACKSEC',
+    live: '',
+    report: 'labs/juice-shop/reports/osqry.pdf'
+  }
+];
+
+/* ================================================================
+   CERTS — editable
+   ================================================================ */
+const CERTS = [
+  {
+    id: 'cert-1',
+    name: 'Certified Cybersecurity Foundations',
+    issuer: 'HACKVISER',
+    date: '2026-01',
+    status: 'COMPLETED',
+    image: 'assets/images/certificates/hackviser.png',
+    verifyUrl: 'https://hackviser.com/file/hackviser-prod/certificates/11779d7bde264febaf15db3a10f39901.pdf',
+    pdf: 'assets/certificates/hackviser.pdf'
+  },
+  {
+    id: 'cert-2',
+    name: 'Cybersecurity Fundamentals Associate',
+    issuer: 'OPSWAT ACADEMY',
+    date: '2026-01',
+    status: 'COMPLETED',
+    image: 'assets/images/certificates/opswat.png',
+    verifyUrl: 'https://learn.opswatacademy.com/certifications/b84817ee-e2a8-11ee-b0e1-026395ab6fa9',
+    pdf: 'assets/certificates/cert-2.pdf'
+  }
+];
+
+/* ================================================================
+   AI CARDS — editable
+   ================================================================ */
+const AI_CARDS = [
+  { icon:'<path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/>',
+    title:'Technical Notes & Research',
+    desc:'Using AI to structure and clarify notes from labs, documentation, and research.',
+    status:'In Progress', tools:['LLM chat','Markdown'] },
+  { icon:'<circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/>',
+    title:'Cybersecurity Research',
+    desc:'Literature review, concept explanation, and mapping techniques to lab scenarios.',
+    status:'In Progress', tools:['LLM chat','Docs'] },
+  { icon:'<path d="M10 2v7.31"/><path d="M14 9.3V2"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.58 16.5h12.85"/>',
+    title:'Lab Analysis Support',
+    desc:'Breaking down lab objectives and interpreting tool output during authorized practice.',
+    status:'In Progress', tools:['Linux','LLM chat'] },
+  { icon:'<path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/>',
+    title:'Report Drafting',
+    desc:'Support for structuring write-ups. Findings and content remain my own verified work.',
+    status:'In Progress', tools:['Markdown'] },
+  { icon:'<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>',
+    title:'Code Explanation & Review',
+    desc:'Python/Bash assistance, debugging, and reviewing scripts for clarity.',
+    status:'In Progress', tools:['Python','Bash'] },
+  { icon:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M12 8v4"/><path d="M12 16h.01"/>',
+    title:'AI Security Learning',
+    desc:'Exploring AI application security through authorized vulnerable apps.',
+    status:'Planned', tools:['DVAP','AIGoat'] },
+  { icon:'<path d="M3 3v18h18"/><path d="m7 14 4-4 4 4 6-6"/>',
+    title:'n8n Workflows',
+    desc:'Exploring n8n for automation pipelines connecting tools and reducing manual steps.',
+    status:'In Progress', tools:['n8n'] },
+  { icon:'<rect x="4" y="4" width="16" height="16" rx="2"/><rect x="9" y="9" width="6" height="6"/><path d="M9 1v3"/><path d="M15 1v3"/><path d="M9 20v3"/><path d="M15 20v3"/><path d="M20 9h3"/><path d="M20 14h3"/><path d="M1 9h3"/><path d="M1 14h3"/>',
+    title:'Development Automation',
+    desc:'Using AI to accelerate boilerplate, documentation, and iterative coding in personal projects.',
+    status:'In Progress', tools:['LLM chat','Git'] },
+];
+
+/* ================================================================
+   FOCUS — editable
+   ================================================================ */
+const FOCUS = [
+  { icon:'<path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/>', title:'Cybersecurity & Pentesting',
+    items:['OWASP Top 10 awareness','Burp Suite basics','Vulnerability assessment workflow'] },
+  { icon:'<rect x="16" y="16" width="6" height="6" rx="1"/><rect x="2" y="16" width="6" height="6" rx="1"/><rect x="9" y="2" width="6" height="6" rx="1"/><path d="M5 16v-3a1 1 0 0 1 1-1h12a1 1 0 0 1 1 1v3"/><path d="M12 12V8"/>', title:'Networking & Network Security',
+    items:['TCP/IP fundamentals','Subnetting & routing basics','Wireshark packet analysis'] },
+  { icon:'<polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/>', title:'Programming & Software Dev',
+    items:['Python','Bash','JavaScript / HTML / CSS'] },
+  { icon:'<rect x="3" y="11" width="18" height="10" rx="2"/><circle cx="12" cy="5" r="2"/><path d="M12 7v4"/>', title:'AI & Automation',
+    items:['AI-assisted research','n8n workflow exploration','Code explanation & review'] },
+  { icon:'<path d="M4 4h16v12H4z"/><path d="M2 20h20"/><path d="M8 16v4"/><path d="M16 16v4"/>', title:'Computer Engineering & Linux',
+    items:['Linux CLI & shell scripting','Permissions & services','Privilege escalation concepts'] },
+];
+
+const LABS = [
+  {
+    id: 'juice-shop',
+    title: 'OWASP Juice Shop',
+    category: 'Web Application Security',
+    difficulty: '',
+    description: 'Modern vulnerable web application for security training.',
+    tags: ['OWASP', 'Web', 'JavaScript'],
+    image: 'assets/images/labs/juiceshop.png',
+    screenshot: '',
+    status: 'IN_PROGRESS',
+    github: '',
+    writeup: 'labs/juice-shop/index.html',
+    medium: '',
+    report: 'labs/juice-shop/reports/osqry.pdf',
+    labUrl: 'https://github.com/juice-shop/juice-shop'
+  },
+  {
+    id: 'dvwa',
+    title: 'DVWA',
+    category: 'Web Application Security',
+    difficulty: '',
+    description: 'Damn Vulnerable Web Application — classic PHP/MySQL lab.',
+    tags: ['PHP', 'MySQL', 'Web'],
+    image: 'assets/images/labs/dvwa.png',
+    screenshot: '',
+    status: 'COMPLETED',
+    github: 'https://github.com/itsdrexonkelvix905',
+    writeup: 'labs/dvwa/index.html',
+    medium: 'https://medium.com/@drexonkelvix',
+    report: '',
+    labUrl: 'https://github.com/digininja/DVWA'
+  },
+  {
+    id: 'webgoat',
+    title: 'WebGoat',
+    category: 'Web Application Security',
+    difficulty: '',
+    description: 'OWASP deliberately insecure web application.',
+    tags: ['OWASP', 'Java', 'Web'],
+    image: 'assets/images/labs/webgoat.png',
+    screenshot: '',
+    status: 'PENDING',
+    github: '',
+    writeup: 'labs/webgoat/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://github.com/webgoat/webgoat'
+  },
+  {
+    id: 'mr-robot',
+    title: 'Mr-Robot: 1',
+    category: 'Web Application Security',
+    difficulty: '',
+    description: 'Boot2root CTF-style vulnerable machine.',
+    tags: ['CTF', 'WordPress', 'Linux'],
+    image: 'assets/images/labs/mr-robot.png',
+    screenshot: '',
+    status: 'PLANNED',
+    github: '',
+    writeup: 'labs/mr-robot/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://www.vulnhub.com/entry/mr-robot-1,151/'
+  },
+  {
+    id: 'pwnlab',
+    title: 'PwnLab: init',
+    category: 'Web Application Security',
+    difficulty: '',
+    description: 'Vulnerable machine focused on web and privilege escalation.',
+    tags: ['PrivEsc', 'PHP', 'Linux'],
+    image: 'assets/images/labs/pwnlab.png',
+    screenshot: '',
+    status: 'PLANNED',
+    github: '',
+    writeup: 'labs/pwnlab/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://www.vulnhub.com/entry/pwnlab-init,158/'
+  },
+  {
+    id: 'web-for-pentester',
+    title: 'Web for Pentester',
+    category: 'Web Application Security',
+    difficulty: '',
+    description: 'PentesterLab web security exercises.',
+    tags: ['PentesterLab', 'Web'],
+    image: 'assets/images/labs/wef.png',
+    screenshot: '',
+    status: 'PLANNED',
+    github: '',
+    writeup: 'labs/web-for-pentester/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://www.vulnhub.com/entry/pentester-lab-web-for-pentester,71/'
+  },
+  {
+    id: 'crapi',
+    title: 'OWASP crAPI',
+    category: 'API Security',
+    difficulty: '',
+    description: 'Completely Ridiculous API — API security lab.',
+    tags: ['OWASP', 'API', 'REST'],
+    image: 'assets/images/labs/crapi.png',
+    screenshot: '',
+    status: 'PLANNED',
+    github: '',
+    writeup: 'labs/crapi/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://github.com/owasp/crapi'
+  },
+  {
+    id: 'vampi',
+    title: 'VAmPI',
+    category: 'API Security',
+    difficulty: '',
+    description: 'Vulnerable API for learning API security testing.',
+    tags: ['API', 'Flask', 'OWASP'],
+    image: 'assets/images/labs/vamapi.png',
+    screenshot: '',
+    status: 'PLANNED',
+    github: '',
+    writeup: 'labs/vampi/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://github.com/erev0s/VAmPI'
+  },
+  {
+    id: 'api-auth',
+    title: 'Auth & Authorization Testing',
+    category: 'API Security',
+    difficulty: '',
+    description: 'Focused exercises on API authentication and authorization flaws.',
+    tags: ['Auth', 'JWT', 'OAuth'],
+    image: 'assets/images/labs/api-auth.png',
+    screenshot: '',
+    status: 'IN_PROGRESS',
+    github: '',
+    writeup: 'labs/api-auth/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://github.com/membrane/api-gateway?gad_source=1&gad_campaignid=22748499813&gbraid=0AAAAAD0lPMgrVLSiDR6Qm4TktWt1HFvYx&gclid=CjwKCAjw56zWBhB0EiwAdPOQOSGUKgED1RsCRTWSRER-O5q92svtuD0OO1dE-Z2HAsdB4t0X9WDGjRoCyRQQAvD_BwE'
+  },
+  {
+    id: 'metasploitable2',
+    title: 'Metasploitable 2',
+    category: 'Network Pentesting',
+    difficulty: '',
+    description: 'Intentionally vulnerable Linux VM for network exploitation practice.',
+    tags: ['Linux', 'Network', 'Exploit'],
+    image: 'assets/images/labs/metasploitable2.png',
+    screenshot: '',
+    status: 'PLANNED',
+    github: '',
+    writeup: 'labs/metasploitable2/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://sourceforge.net/projects/metasploitable2/'
+  },
+  {
+    id: 'vulnix',
+    title: 'Vulnix',
+    category: 'Network Pentesting',
+    difficulty: '',
+    description: 'Vulnerable NixOS-based machine for pentesting practice.',
+    tags: ['NixOS', 'Linux', 'Network'],
+    image: 'assets/images/labs/vulnix.png',
+    screenshot: '',
+    status: 'PLANNED',
+    github: '',
+    writeup: 'labs/vulnix/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://www.vulnhub.com/entry/hacklab-vulnix,48/'
+  },
+  {
+    id: 'metasploitable3-win',
+    title: 'Metasploitable 3 Windows',
+    category: 'Windows Security',
+    difficulty: '',
+    description: 'Vulnerable Windows environment for exploitation practice.',
+    tags: ['Windows', 'Exploit', 'AD'],
+    image: 'assets/images/labs/metasploitable3-win.png',
+    screenshot: '',
+    status: 'PLANNED',
+    github: '',
+    writeup: 'labs/metasploitable3-win/index.html',
+    medium: '',
+    report: '',
+    labUrl: ''
+  },
+  {
+    id: 'ad-lab',
+    title: 'Isolated AD Lab',
+    category: 'Active Directory',
+    difficulty: '',
+    description: 'Windows Server Domain Controller + client lab for AD techniques.',
+    tags: ['AD', 'Windows', 'Kerberos'],
+    image: 'assets/images/labs/ad-lab.png',
+    screenshot: '',
+    status: 'PLANNED',
+    github: '',
+    writeup: 'labs/ad-lab/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://github.com/alebov/AD-lab'
+  },
+  {
+    id: 'hades',
+    title: 'Hades',
+    category: 'Exploitation and Reverse Engineering',
+    difficulty: '',
+    description: 'Binary analysis and exploitation exercises.',
+    tags: ['Binary', 'RE', 'Exploit'],
+    image: 'assets/images/labs/hades.png',
+    screenshot: '',
+    status: 'PLANNED',
+    github: '',
+    writeup: 'labs/hades/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://www.vulnhub.com/entry/the-infernal-hades-v101,61/'
+  },
+  {
+    id: 'binary-analysis',
+    title: 'Binary Analysis Exercises',
+    category: 'Exploitation and Reverse Engineering',
+    difficulty: '',
+    description: 'Local binary analysis and reverse engineering practice.',
+    tags: ['RE', 'Ghidra', 'Binary'],
+    image: 'assets/images/labs/binary-analysis.png',
+    screenshot: '',
+    status: 'PLANNED',
+    github: '',
+    writeup: 'labs/binary-analysis/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://github.com/GoSecure/advanced-binary-analysis'
+  },
+  {
+    id: 'ha-forensics',
+    title: 'HA: Forensics',
+    category: 'Digital Forensics',
+    difficulty: '',
+    description: 'Forensic evidence analysis exercises.',
+    tags: ['Forensics', 'DFIR'],
+    image: 'assets/images/labs/ha-forensics.png',
+    screenshot: '',
+    status: 'PLANNED',
+    github: '',
+    writeup: 'labs/ha-forensics/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://www.vulnhub.com/entry/ha-forensics,570/'
+  },
+  {
+    id: 'remnux',
+    title: 'REMnux',
+    category: 'Malware Analysis and Sandbox',
+    difficulty: '',
+    description: 'Linux toolkit for reverse-engineering and analyzing malware (safe, isolated).',
+    tags: ['Malware', 'Linux', 'Isolated'],
+    image: 'assets/images/labs/remnux.png',
+    screenshot: '',
+    status: 'PLANNED',
+    github: '',
+    writeup: 'labs/remnux/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://github.com/REMnux'
+  },
+  {
+    id: 'flare-vm',
+    title: 'FLARE-VM',
+    category: 'Malware Analysis and Sandbox',
+    difficulty: '',
+    description: 'Windows-based malware analysis environment.',
+    tags: ['Windows', 'Malware', 'VM'],
+    image: 'assets/images/labs/flare-vm.png',
+    screenshot: '',
+    status: 'PLANNED',
+    github: '',
+    writeup: 'labs/flare-vm/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://github.com/mandiant/flare-vm'
+  },
+  {
+    id: 'ghidra-yara',
+    title: 'Ghidra / YARA / ProcMon',
+    category: 'Malware Analysis and Sandbox',
+    difficulty: '',
+    description: 'Tool-focused malware analysis exercises with Ghidra, YARA, Process Monitor, Wireshark.',
+    tags: ['Ghidra', 'YARA', 'ProcMon'],
+    image: 'assets/images/labs/ghidra-yara.png',
+    screenshot: '',
+    status: 'PLANNED',
+    github: '',
+    writeup: 'labs/ghidra-yara/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://github.com/brett-fitz/malware-pcap'
+  },
+  {
+    id: 'android-lab',
+    title: 'Android Emulator Lab',
+    category: 'Mobile Security',
+    difficulty: '',
+    description: 'Authorized vulnerable APKs on Android emulator.',
+    tags: ['Android', 'Mobile', 'APK'],
+    image: 'assets/images/labs/android-lab.png',
+    screenshot: '',
+    status: 'PLANNED',
+    github: '',
+    writeup: 'labs/android-lab/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://github.com/THUDM/Android-Lab'
+  },
+  {
+    id: 'dvap',
+    title: 'DVAP',
+    category: 'AI Security',
+    difficulty: '',
+    description: 'Damn Vulnerable AI Application — AI security exercises.',
+    tags: ['AI', 'LLM', 'OWASP'],
+    image: 'assets/images/labs/dvap.png',
+    screenshot: '',
+    status: 'PLANNED',
+    github: '',
+    writeup: 'labs/dvap/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://github.com/sonuoffsec/DVAP'
+  },
+  {
+    id: 'aigoat',
+    title: 'AIGoat',
+    category: 'AI Security',
+    difficulty: '',
+    description: 'Authorized AI application security learning environment.',
+    tags: ['AI', 'LLM', 'Auth'],
+    image: 'assets/images/labs/aigoat.png',
+    screenshot: '',
+    status: 'IN_PROGRESS',
+    github: '',
+    writeup: 'labs/aigoat/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://github.com/orcasecurity-research/AIGoat'
+  },
+  {
+    id: 'spiderfoot',
+    title: 'SpiderFoot',
+    category: 'OSINT',
+    difficulty: '',
+    description: 'OSINT automation tool practice with public datasets.',
+    tags: ['OSINT', 'Recon'],
+    image: 'assets/images/labs/spiderfoot.png',
+    screenshot: '',
+    status: 'COMING_SOON',
+    github: '',
+    writeup: 'labs/spiderfoot/index.html',
+    medium: '',
+    report: '',
+    labUrl: ''
+  },
+  {
+    id: 'theharvester',
+    title: 'theHarvester / Amass',
+    category: 'OSINT',
+    difficulty: '',
+    description: 'Passive recon and OSINT gathering exercises.',
+    tags: ['OSINT', 'Recon', 'Passive'],
+    image: 'assets/images/labs/theharvester.png',
+    screenshot: '',
+    status: 'IN_PROGRESS',
+    github: '',
+    writeup: 'labs/theharvester/index.html',
+    medium: '',
+    report: '',
+    labUrl: ''
+  },
+  {
+    id: 'cryptohack',
+    title: 'CryptoHack',
+    category: 'Cryptography',
+    difficulty: '',
+    description: 'Cryptography challenges and local crypto exercises.',
+    tags: ['Crypto', 'Math'],
+    image: 'assets/images/labs/cryptohack.png',
+    screenshot: '',
+    status: 'COMING_SOON',
+    github: '',
+    writeup: 'labs/cryptohack/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://cryptohack.org/'
+  },
+  {
+    id: 'wireshark-pcap',
+    title: 'Wireshark / tcpdump / PCAP',
+    category: 'Network Traffic Analysis',
+    difficulty: '',
+    description: 'Packet analysis with public PCAP datasets.',
+    tags: ['PCAP', 'Wireshark', 'Traffic'],
+    image: 'assets/images/labs/wireshark-pcap.png',
+    screenshot: '',
+    status: 'PENDING',
+    github: '',
+    writeup: 'labs/wireshark-pcap/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://github.com/fox-it/spookyssl-pcaps',
+  },
+  {
+    id: 'pivoting',
+    title: 'Pivoting & Lateral Movement',
+    category: 'Pivoting and Lateral Movement',
+    difficulty: '',
+    description: 'Isolated technique labs using authorized VMs.',
+    tags: ['Pivoting', 'Lateral', 'AD'],
+    image: 'assets/images/labs/pivoting.png',
+    screenshot: '',
+    status: 'COMING_SOON',
+    github: '',
+    writeup: 'labs/pivoting/index.html',
+    medium: '',
+    report: '',
+    labUrl: ''
+  },
+  {
+    id: 'wazuh',
+    title: 'Wazuh',
+    category: 'Security Monitoring and Detection',
+    difficulty: '',
+    description: 'Open-source XDR/SIEM learning and detection exercises.',
+    tags: ['SIEM', 'Detection', 'Blue Team'],
+    image: 'assets/images/labs/wazuh.png',
+    screenshot: '',
+    status: 'PENDING',
+    github: '',
+    writeup: 'labs/wazuh/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://github.com/wazuh/wazuh'
+  },
+  {
+    id: 'docker-security',
+    title: 'Docker Security',
+    category: 'Container Security',
+    difficulty: '',
+    description: 'Container security exercises and misconfiguration analysis.',
+    tags: ['Docker', 'Container', 'Linux'],
+    image: 'assets/images/labs/docker-security.png',
+    screenshot: '',
+    status: 'IN_PROGRESS',
+    github: '',
+    writeup: 'labs/docker-security/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://github.com/paulveillard/cybersecurity-docker-security'
+  },
+  {
+    id: 'linux-security',
+    title: 'Linux Security Exercises',
+    category: 'Linux Security',
+    difficulty: '',
+    description: 'Permissions, services, enumeration and privilege escalation in authorized labs.',
+    tags: ['Linux', 'PrivEsc', 'Enum'],
+    image: 'assets/images/labs/linux-security.png',
+    screenshot: '',
+    status: 'IN_PROGRESS',
+    github: '',
+    writeup: 'labs/linux-security/index.html',
+    medium: '',
+    report: '',
+    labUrl: 'https://github.com/sagishahar/lpeworkshop'
+  }
+];
+const PLATFORM_LABS = [
+{
+     id: 'thm-owasp-top-10',
+     title: 'OWASP Top 10',
+     platform: 'OWASP',
+     platformSlug: 'OWASP',
+     category: 'Platform Labs',
+     difficulty: 'Easy',
+     description: 'Guided walkthrough of the OWASP Top 10.',
+     tags: ['OWASP','Web'],
+     image: 'assets/images/owasp top.png',
+     status: 'PLANNED',
+     openUrl: 'https://github.com/OWASP/Top10/',
+     github: '',
+     writeup: 'platform-labs/tryhackme/labs/thm-owasp-top-10/index.html',
+     medium: '',
+     report: ''
+   },
+   {
+     id: 'thm-owasp-top-10',
+     title: 'PORTSWIGGER',
+     platform: 'PORTSWIGGER',
+     platformSlug: 'tryhackme',
+     category: 'Platform Labs',
+     difficulty: 'Easy',
+     description: 'Guided walkthrough of the OWASP Top 10.',
+     tags: ['OWASP','Web'],
+     image: 'assets/images/portswigger.png',
+     status: 'PLANNED',
+     openUrl: 'https://tryhackme.com/room/owasptop10',
+     github: '',
+     writeup: 'platform-labs/tryhackme/labs/thm-owasp-top-10/index.html',
+     medium: '',
+     report: 'https://portswigger.net/'
+   },
+   {
+     id: 'thm10',
+     title: 'TryHackMe',
+     platform: 'TryHackMe',
+     platformSlug: 'tryhackme',
+     category: 'Platform Labs',
+     difficulty: 'Easy',
+     description: 'Guided walkthrough of the OWASP Top 10.',
+     tags: ['OWASP','Web'],
+     image: 'assets/images/thm.png',
+     status: 'PLANNED',
+     openUrl: 'https://tryhackme.com',
+     github: '',
+     writeup: 'platform-labs/tryhackme/labs/thm-owasp-top-10/index.html',
+     medium: '',
+     report: ''
+   },
+   {
+     id: 'htb',
+     title: 'HACK THE BOX',
+     platform: 'HACK THE BOX',
+     platformSlug: 'HACK THE BOX',
+     category: 'Platform Labs',
+     difficulty: 'Easy',
+     description: 'Guided walkthrough of the OWASP Top 10.',
+     tags: ['OWASP','Web'],
+     image: 'assets/images/htb.png',
+     status: 'IN_PROGRESS',
+     openUrl: 'https://academy.hackthebox.com/',
+     github: '',
+     writeup: 'platform-labs/tryhackme/labs/thm-owasp-top-10/index.html',
+     medium: '',
+     report: ''
+   },
+   {
+     id: 'CWL',
+     title: 'CYBERWARFARE',
+     platform: 'CYBERWARFARE.LIVE',
+     platformSlug: 'CYBERWARFARE.LIVE',
+     category: 'Platform Labs',
+     difficulty: 'Easy',
+     description: 'Guided walkthrough of the OWASP Top 10.',
+     tags: ['OWASP','Web'],
+     image: 'assets/images/cwl.png',
+     status: 'IN_PROGRESS',
+     openUrl: 'https://cyberwarfare.live/',
+     github: '',
+     writeup: 'platform-labs/tryhackme/labs/thm-owasp-top-10/index.html',
+     medium: '',
+     report: ''
+  }
+];
+
+const THEME_KEY = 'drexon-theme';
+const GATE_KEY  = 'drexon-gate-open';
+
+const DEMO_PASSCODE = '9905DREXON';
+
+const STATUS_META = {
+  LIVE:{label:'Live',group:'live'}, COMPLETED:{label:'Completed',group:'completed'},
+  IN_PROGRESS:{label:'In Progress',group:'progress'}, PENDING:{label:'Pending',group:'progress'},
+  PLANNED:{label:'Planned',group:'planned'}, COMING_SOON:{label:'Coming Soon',group:'planned'},
+  ON_HOLD:{label:'On Hold',group:'progress'}, ARCHIVED:{label:'Archived',group:'planned'}
+};
+const LAB_STATUS_META = {
+  COMPLETED:{label:'Completed',group:'completed'}, PUBLISHED:{label:'Published',group:'published'},
+  IN_PROGRESS:{label:'In Progress',group:'progress'}, PENDING:{label:'Pending',group:'pending'},
+  PLANNED:{label:'Planned',group:'planned'}, COMING_SOON:{label:'Coming Soon',group:'planned'},
+  DRAFT:{label:'Draft',group:'planned'}, ON_HOLD:{label:'On Hold',group:'progress'},
+  ARCHIVED:{label:'Archived',group:'planned'}
+};
+
+function escapeHtml(str){
+  if (str == null) return '';
+  const d = document.createElement('div');
+  d.textContent = String(str);
+  return d.innerHTML;
+}
+function escapeAttr(str){
+  if (str == null) return '';
+  return String(str).replace(/&/g,'&amp;').replace(/"/g,'&quot;')
+    .replace(/'/g,'&#39;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+function hasUrl(u){ return typeof u === 'string' && u.trim().length > 0; }
+
+function normalizeStatus(raw){
+  if (!raw) return 'PLANNED';
+  const k = String(raw).trim().toUpperCase().replace(/[-\s]+/g,'_');
+  return STATUS_META[k] ? k : 'PLANNED';
+}
+function normalizeLabStatus(raw){
+  if (!raw) return 'PLANNED';
+  const k = String(raw).trim().toUpperCase().replace(/[-\s]+/g,'_');
+  return LAB_STATUS_META[k] ? k : 'PLANNED';
+}
+function statusBadgeHTML(raw){
+  const k = normalizeStatus(raw);
+  const m = STATUS_META[k];
+  return `<span class="status-badge" data-status="${k}" title="Status: ${m.label}"><span class="sb-dot" aria-hidden="true"></span>${m.label}</span>`;
+}
+function labStatusBadgeHTML(raw){
+  const k = normalizeLabStatus(raw);
+  const m = LAB_STATUS_META[k];
+  return `<span class="status-badge" data-status="${k}" title="Lab status: ${m.label}"><span class="sb-dot" aria-hidden="true"></span>${m.label}</span>`;
+}
+function isValidLiveUrl(url){
+  if (typeof url !== 'string') return false;
+  const v = url.trim();
+  if (!v) return false;
+  if (!/^https?:\/\//i.test(v)) return false;
+  const bare = v.replace(/^https?:\/\//i,'').toLowerCase();
+  if (STATUS_META[bare.toUpperCase()]) return false;
+  return true;
+}
+function labMatchesStatusFilter(lab, filter){
+  if (filter === 'all') return true;
+  const k = normalizeLabStatus(lab.status);
+  const g = LAB_STATUS_META[k].group;
+  if (filter === 'completed') return k === 'COMPLETED';
+  if (filter === 'published') return k === 'PUBLISHED';
+  if (filter === 'progress')  return g === 'progress';
+  if (filter === 'planned')   return g === 'planned';
+  if (filter === 'pending')   return k === 'PENDING';
+  return true;
+}
+
+/* ---------- Loader ---------- */
+function initLoader(){
+  const loader = document.getElementById('loader');
+  if (!loader) return;
+  const done = () => loader.classList.add('done');
+  setTimeout(done, 1400);
+  setTimeout(done, 2600);
+}
+
+/* ---------- Gate (client-side demo) ---------- */
+function showGate(){
+  document.getElementById('gate').classList.remove('hidden');
+  document.getElementById('mainContent').classList.add('hidden');
+  document.getElementById('siteFooter').style.display = 'none';
+  const s = document.getElementById('gateStatusVal');
+  if (s) s.textContent = 'LOCKED';
+}
+function hideGate(){
+  document.getElementById('gate').classList.add('hidden');
+  document.getElementById('mainContent').classList.remove('hidden');
+  document.getElementById('siteFooter').style.display = '';
+  const s = document.getElementById('gateStatusVal');
+  if (s) s.textContent = 'UNLOCKED';
+}
+function initGate(){
+  let opened = false;
+  try { opened = sessionStorage.getItem(GATE_KEY) === 'open'; } catch(e){}
+  if (opened) hideGate(); else showGate();
+}
+function setupGateForm(){
+  const form = document.getElementById('gateForm');
+  const pass = document.getElementById('gatePass');
+  const err  = document.getElementById('gateError');
+  const tog  = document.getElementById('gateToggle');
+  const s    = document.getElementById('gateStatusVal');
+
+  tog.addEventListener('click', () => {
+    const showing = pass.type === 'text';
+    pass.type = showing ? 'password' : 'text';
+    tog.setAttribute('aria-label', showing ? 'Show passphrase' : 'Hide passphrase');
+    tog.innerHTML = showing
+      ? '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"/><circle cx="12" cy="12" r="3"/></svg>'
+      : '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M9.88 9.88a3 3 0 1 0 4.24 4.24"/><path d="M10.73 5.08A10.43 10.43 0 0 1 12 5c7 0 10 7 10 7a13.16 13.16 0 0 1-1.67 2.68"/><path d="M6.61 6.61A13.526 13.526 0 0 0 2 12s3 7 10 7a9.74 9.74 0 0 0 5.39-1.61"/><line x1="2" y1="2" x2="22" y2="22"/></svg>';
+    pass.focus();
+  });
+
+  form.addEventListener('submit', (e) => {
+    e.preventDefault();
+    if (pass.value === DEMO_PASSCODE){
+      err.classList.remove('show');
+      try { sessionStorage.setItem(GATE_KEY,'open'); } catch(e){}
+      hideGate();
+      window.scrollTo(0,0);
+    } else {
+      err.classList.add('show');
+      if (s) s.textContent = 'DENIED';
+      pass.value='';
+      pass.focus();
+      setTimeout(() => { if (s) s.textContent = 'LOCKED'; }, 1800);
+    }
+  });
+}
+function setupLogout(){
+  document.getElementById('logoutBtn').addEventListener('click', (e) => {
+    e.preventDefault();
+    try { sessionStorage.removeItem(GATE_KEY); } catch(e){}
+    showGate();
+  });
+}
+
+/* ---------- Theme ---------- */
+function applyTheme(theme){
+  if (theme === 'orange') document.documentElement.removeAttribute('data-theme');
+  else document.documentElement.setAttribute('data-theme', theme);
+  document.querySelectorAll('.theme-option').forEach(el => {
+    el.classList.toggle('active', el.dataset.theme === theme);
+  });
+  try { localStorage.setItem(THEME_KEY, theme); } catch(e){}
+}
+function initTheme(){
+  let saved = 'orange';
+  try { saved = localStorage.getItem(THEME_KEY) || 'orange'; } catch(e){}
+  applyTheme(saved);
+}
+
+/* ---------- Navigation ---------- */
+function showSection(id){
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  const target = document.getElementById('section-' + id);
+  if (target) target.classList.add('active');
+  document.querySelectorAll('.nav-link').forEach(l => {
+    l.classList.toggle('active', l.dataset.nav === id);
+  });
+  document.getElementById('mobileNav').classList.remove('open');
+  document.getElementById('mobileToggle').setAttribute('aria-expanded','false');
+  window.scrollTo(0,0);
+}
+
+/* ---------- Projects ---------- */
+let activeProjectFilter = 'all';
+function projectMatchesFilter(p, filter){
+  if (filter === 'all') return true;
+  const k = normalizeStatus(p.status);
+  const g = STATUS_META[k].group;
+  if (filter === 'live')      return k === 'LIVE' || k === 'MAINTENANCE';
+  if (filter === 'progress')  return g === 'progress';
+  if (filter === 'planned')   return g === 'planned';
+  if (filter === 'completed') return g === 'completed';
+  return true;
+}
+function updateProjectCounts(){
+  const counts = { all: PROJECTS.length, live:0, progress:0, planned:0, completed:0 };
+  PROJECTS.forEach(p => {
+    const k = normalizeStatus(p.status);
+    const g = STATUS_META[k].group;
+    if (k === 'LIVE') counts.live++;
+    if (g === 'progress')  counts.progress++;
+    if (g === 'planned')   counts.planned++;
+    if (g === 'completed') counts.completed++;
+  });
+  document.querySelectorAll('[data-count]').forEach(el => {
+    const k = el.getAttribute('data-count');
+    el.textContent = counts[k] ?? 0;
+  });
+}
+function renderProjects(){
+  const grid = document.getElementById('projectsGrid');
+  const filtered = PROJECTS.filter(p => projectMatchesFilter(p, activeProjectFilter));
+  if (!filtered.length){
+    grid.innerHTML = '<div class="empty-state" style="grid-column:1/-1;"><p>No projects match this filter.</p></div>';
+    return;
+  }
+  grid.innerHTML = filtered.map(p => {
+    const k = normalizeStatus(p.status);
+    const liveOk = isValidLiveUrl(p.live);
+    const ghOk   = hasUrl(p.github);
+    const repOk  = hasUrl(p.report);
+    return `
+    <article class="project-card" data-status="${k}">
+      <span class="project-status">${statusBadgeHTML(k)}</span>
+      <div class="project-img">
+        ${hasUrl(p.screenshot)
+          ? `<img src="${escapeAttr(p.screenshot)}" alt="${escapeAttr(p.title)} screenshot" loading="lazy" onerror="this.parentElement.innerHTML='<div class=\\'ph\\'>[ image failed to load ]</div>'">`
+          : `<div class="ph"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect width="18" height="18" x="3" y="3" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.086-3.086a2 2 0 0 0-2.828 0L6 21"/></svg>[ screenshot placeholder ]</div>`}
+      </div>
+      <div class="project-body">
+        <h3>${escapeHtml(p.title)}</h3>
+        <p>${escapeHtml(p.description)}</p>
+        <div class="tags">${(p.tags||[]).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
+        <div class="project-actions">
+          ${ghOk ? `<a class="btn btn-sm btn-outline" href="${escapeAttr(p.github)}" target="_blank" rel="noopener noreferrer">${ICON.github} GitHub</a>` : ''}
+          ${liveOk ? `<a class="btn btn-sm btn-primary" href="${escapeAttr(p.live)}" target="_blank" rel="noopener noreferrer">Live</a>` : ''}
+          ${repOk ? `<a class="btn btn-sm btn-ghost" href="${escapeAttr(p.report)}" target="_blank" rel="noopener noreferrer">Report</a>` : ''}
+        </div>
+      </div>
+    </article>`;
+  }).join('');
+}
+function initProjectFilters(){
+  const toolbar = document.getElementById('projectsToolbar');
+  if (!toolbar) return;
+  toolbar.querySelectorAll('.projects-filter').forEach(btn => {
+    btn.addEventListener('click', () => {
+      activeProjectFilter = btn.dataset.filter || 'all';
+      toolbar.querySelectorAll('.projects-filter').forEach(b => {
+        const on = b === btn;
+        b.classList.toggle('active', on);
+        b.setAttribute('aria-selected', on ? 'true' : 'false');
+      });
+      renderProjects();
+    });
+  });
+  updateProjectCounts();
+}
+
+/* ---------- Certs ---------- */
+function renderCerts(){
+  const grid = document.getElementById('certsGrid');
+  if (!CERTS.length){
+    grid.innerHTML = '<div class="empty-state"><p>No certifications listed yet.</p></div>';
+    return;
+  }
+  grid.innerHTML = '<div class="card-grid">' + CERTS.map(c => {
+    const hasImage  = hasUrl(c.image);
+    const hasVerify = hasUrl(c.verifyUrl);
+    const hasPdf    = hasUrl(c.pdf);
+    return `
+      <article class="cert-card">
+        <div class="cert-media ${hasImage ? 'is-clickable' : 'is-missing'}"
+             ${hasImage ? `data-cert-image="${escapeAttr(c.image)}" data-cert-name="${escapeAttr(c.name)}" role="button" tabindex="0" aria-label="Enlarge ${escapeAttr(c.name)} certificate"` : ''}>
+          ${hasImage ? `<img src="${escapeAttr(c.image)}" alt="${escapeAttr(c.name)} certificate" loading="lazy"
+                 onerror="this.parentElement.classList.remove('is-clickable'); this.parentElement.classList.add('is-missing'); this.parentElement.innerHTML='<div class=&quot;cert-media-placeholder&quot;><span>Image unavailable</span></div>';">`
+            : `<div class="cert-media-placeholder"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="8" r="6"/><path d="M15.477 12.89 17 22l-5-3-5 3 1.523-9.11"/></svg><span>Certificate image not added yet</span></div>`}
+        </div>
+        <div class="cert-body">
+          <h3 class="cert-title">${escapeHtml(c.name)}</h3>
+          ${c.issuer ? `<div class="cert-issuer">${escapeHtml(c.issuer)}</div>` : ''}
+          <div class="cert-row">
+            ${statusBadgeHTML(c.status || 'PLANNED')}
+            ${c.date ? `<span class="cert-date">${escapeHtml(c.date)}</span>` : ''}
+          </div>
+          ${(hasVerify || hasPdf) ? `<div class="cert-actions">
+            ${hasVerify ? `<a href="${escapeAttr(c.verifyUrl)}" class="btn btn-sm btn-outline" target="_blank" rel="noopener noreferrer">Verify</a>` : ''}
+            ${hasPdf ? `<a href="${escapeAttr(c.pdf)}" class="btn btn-sm btn-ghost" target="_blank" rel="noopener noreferrer">View PDF</a>` : ''}
+          </div>` : ''}
+        </div>
+      </article>`;
+  }).join('') + '</div>';
+
+  grid.querySelectorAll('.cert-media.is-clickable').forEach(media => {
+    const open = () => openCertLightbox(media.dataset.certImage, media.dataset.certName);
+    media.addEventListener('click', open);
+    media.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); open(); }
+    });
+  });
+}
+function openCertLightbox(src, name){
+  if (!src) return;
+  const existing = document.getElementById('certLightbox');
+  if (existing) existing.remove();
+  const box = document.createElement('div');
+  box.id = 'certLightbox';
+  box.className = 'cert-lightbox';
+  box.setAttribute('role','dialog');
+  box.setAttribute('aria-modal','true');
+  box.innerHTML = `
+    <button type="button" class="cert-lightbox-close" aria-label="Close preview">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+    </button>
+    <img src="${escapeAttr(src)}" alt="${escapeAttr(name || 'Preview')}" class="cert-lightbox-img">
+  `;
+  document.body.appendChild(box);
+  document.body.style.overflow = 'hidden';
+  const close = () => {
+    box.remove();
+    document.body.style.overflow = '';
+    document.removeEventListener('keydown', onKey);
+  };
+  const onKey = (e) => { if (e.key === 'Escape') close(); };
+  box.querySelector('.cert-lightbox-close').addEventListener('click', close);
+  box.addEventListener('click', (e) => { if (e.target === box) close(); });
+  document.addEventListener('keydown', onKey);
+}
+
+/* ---------- Contact ---------- */
+function renderContact(){
+  const grid = document.getElementById('contactLinks');
+  const home = document.getElementById('homeContact');
+  const foot = document.getElementById('footerSocials');
+
+  const renderItem = (c) => {
+    const icon = ICON[c.icon] || ICON.mail;
+    const configured = hasUrl(c.url);
+    const isMail = configured && c.url.startsWith('mailto:');
+    if (configured){
+      const target = isMail ? '' : ' target="_blank" rel="noopener noreferrer"';
+      return `<a class="contact-link" href="${escapeAttr(c.url)}"${target} aria-label="${escapeAttr(c.label)}" title="${escapeAttr(c.label)}" data-platform="${escapeAttr(c.id)}">
+        <span class="ci-icon" aria-hidden="true">${icon}</span>
+        <span class="ci-label">${escapeHtml(c.label)}</span>
+      </a>`;
+    }
+    return `<span class="contact-link is-placeholder" role="link" aria-disabled="true" aria-label="${escapeAttr(c.label)} — not configured" data-platform="${escapeAttr(c.id)}" tabindex="0">
+      <span class="ci-icon" aria-hidden="true">${icon}</span>
+      <span class="ci-label">${escapeHtml(c.label)}</span>
+      <span class="ci-tag">[ set link ]</span>
+    </span>`;
+  };
+
+  grid.innerHTML = CONTACT.map(renderItem).join('');
+  home.innerHTML = CONTACT.map(renderItem).join('');
+
+  foot.innerHTML = CONTACT.map(c => {
+    const icon = ICON[c.icon] || ICON.mail;
+    const configured = hasUrl(c.url);
+    const isMail = configured && c.url.startsWith('mailto:');
+    if (configured){
+      const target = isMail ? '' : ' target="_blank" rel="noopener noreferrer"';
+      return `<a class="social-btn" href="${escapeAttr(c.url)}"${target} aria-label="${escapeAttr(c.label)}" title="${escapeAttr(c.label)}">${icon}</a>`;
+    }
+    return `<span class="social-btn is-placeholder" aria-label="${escapeAttr(c.label)} — not configured">${icon}</span>`;
+  }).join('');
+}
+
+/* ---------- AI / Focus ---------- */
+function aiStatusBadge(status){
+  const cls = status === 'Completed' ? 'badge-completed'
+            : status === 'In Progress' ? 'badge-progress'
+            : 'badge';
+  return `<span class="badge ${cls}">${escapeHtml(status)}</span>`;
+}
+function renderAI(containerId, limit){
+  const el = document.getElementById(containerId);
+  const list = limit ? AI_CARDS.slice(0, limit) : AI_CARDS;
+  el.innerHTML = list.map(c => `
+    <article class="ai-card">
+      <div class="icon-wrap"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${c.icon}</svg></div>
+      <h3>${escapeHtml(c.title)}</h3>
+      <p>${escapeHtml(c.desc)}</p>
+      <div class="ai-meta">${aiStatusBadge(c.status)}${(c.tools||[]).map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>
+    </article>`).join('');
+}
+function renderFocus(containerId){
+  const el = document.getElementById(containerId);
+  el.innerHTML = FOCUS.map(f => `
+    <div class="skill-group">
+      <h4><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">${f.icon}</svg> ${escapeHtml(f.title)}</h4>
+      <ul>${f.items.map(i=>`<li>${escapeHtml(i)}</li>`).join('')}</ul>
+    </div>`).join('');
+}
+
+/* ---------- Labs (merged) ---------- */
+let activeLabStatusFilter = 'all';
+let activeLabKindFilter   = 'all';
+
+function allLabsMerged(){
+  const home = LABS.map(l => ({ ...l, labKind:'home' }));
+  const plat = (Array.isArray(PLATFORM_LABS) ? PLATFORM_LABS : []).map(l => ({ ...l, labKind:'platform' }));
+  return home.concat(plat);
+}
+function labMatchesKind(lab, filter){
+  if (filter === 'all') return true;
+  if (filter === 'platform') return lab.labKind === 'platform';
+  if (filter === 'home')     return lab.labKind === 'home';
+  return true;
+}
+function getLabCategories(){
+  const set = new Set();
+  allLabsMerged().forEach(l => { if (l.category) set.add(l.category); });
+  return [...set];
+}
+function updateLabCounts(){
+  const merged = allLabsMerged();
+  const counts = { all: merged.length, completed:0, published:0, progress:0, planned:0, pending:0, platform:0, home:0 };
+  merged.forEach(l => {
+    const k = normalizeLabStatus(l.status);
+    const g = LAB_STATUS_META[k].group;
+    if (k === 'COMPLETED') counts.completed++;
+    if (k === 'PUBLISHED') counts.published++;
+    if (g === 'progress') counts.progress++;
+    if (g === 'planned')  counts.planned++;
+    if (k === 'PENDING')  counts.pending++;
+    if (l.labKind === 'platform') counts.platform++;
+    if (l.labKind === 'home')     counts.home++;
+  });
+  document.querySelectorAll('[data-lcount]').forEach(el => {
+    const k = el.getAttribute('data-lcount');
+    el.textContent = counts[k] ?? 0;
+  });
+}
+function labResourceButtons(lab){
+  const liveUrl = hasUrl(lab.labUrl) ? lab.labUrl
+                : (hasUrl(lab.openUrl) ? lab.openUrl : '');
+  const gh  = hasUrl(lab.github);
+  const wr  = hasUrl(lab.writeup);
+  const med = hasUrl(lab.medium);
+  const rep = hasUrl(lab.report);
+  const live = hasUrl(liveUrl);
+  const any = gh || wr || med || rep || live;
+
+  if (!any){
+    return `<div class="lab-card-actions"><span class="lab-resource-note">No resources configured</span></div>`;
+  }
+
+  return `<div class="lab-card-actions">
+    ${live ? `<a class="lab-resource-btn primary" href="${escapeAttr(liveUrl)}" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M15 3h6v6"/><path d="M10 14 21 3"/><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/></svg>
+      Open Lab
+    </a>` : ''}
+    ${gh ? `<a class="lab-resource-btn" href="${escapeAttr(lab.github)}" target="_blank" rel="noopener noreferrer">
+      ${ICON.github} GitHub
+    </a>` : `<span class="lab-resource-btn disabled" aria-disabled="true" title="No GitHub repository configured">
+      ${ICON.github} GitHub
+    </span>`}
+    ${wr ? `<a class="lab-resource-btn" href="${escapeAttr(lab.writeup)}" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Read Write-up
+    </a>` : `<span class="lab-resource-btn disabled" aria-disabled="true" title="No write-up configured">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+      Write-up — Coming Soon
+    </span>`}
+    ${med ? `<a class="lab-resource-btn" href="${escapeAttr(lab.medium)}" target="_blank" rel="noopener noreferrer">
+      ${ICON.medium} Medium
+    </a>` : ''}
+    ${rep ? `<a class="lab-resource-btn" href="${escapeAttr(lab.report)}" target="_blank" rel="noopener noreferrer">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Download Report
+    </a>` : `<span class="lab-resource-btn disabled" aria-disabled="true" title="No report configured">
+      <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+      Report — N/A
+    </span>`}
+  </div>`;
+}
+function renderLabMedia(lab){
+  const hasImage = hasUrl(lab.image);
+  if (hasImage){
+    return `
+      <div class="lab-media is-clickable"
+           data-lab-image="${escapeAttr(lab.image)}"
+           data-lab-title="${escapeAttr(lab.title)}"
+           role="button" tabindex="0"
+           aria-label="Enlarge ${escapeAttr(lab.title)} preview">
+        <span class="lab-cat-pill">${escapeHtml(lab.category||'')}</span>
+        <span class="lab-status-pill">${labStatusBadgeHTML(lab.status)}</span>
+        <img src="${escapeAttr(lab.image)}" alt="${escapeAttr(lab.title)} preview" loading="lazy"
+             onerror="this.closest('.lab-media').classList.add('is-fallback'); this.closest('.lab-media').classList.remove('is-clickable');">
+      </div>`;
+  }
+  return `
+    <div class="lab-media is-fallback">
+      <span class="lab-cat-pill">${escapeHtml(lab.category||'')}</span>
+      <span class="lab-status-pill">${labStatusBadgeHTML(lab.status)}</span>
+      <div class="lab-media-placeholder">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 2v7.31"/><path d="M14 9.3V2"/><path d="M8.5 2h7"/><path d="M14 9.3a6.5 6.5 0 1 1-4 0"/><path d="M5.58 16.5h12.85"/></svg>
+        <span>Lab preview</span>
+        <span class="lmp-sub">image not added yet</span>
+      </div>
+    </div>`;
+}
+function renderLabsList(){
+  const search = (document.getElementById('labSearch').value || '').toLowerCase();
+  const cat    = document.getElementById('labCategoryFilter').value;
+
+  const filtered = allLabsMerged().filter(l => {
+    if (search && !l.title.toLowerCase().includes(search)
+                && !(l.description||'').toLowerCase().includes(search)
+                && !(l.category||'').toLowerCase().includes(search)
+                && !(l.tags||[]).some(t => t.toLowerCase().includes(search))) return false;
+    if (cat !== 'all' && l.category !== cat) return false;
+    if (!labMatchesStatusFilter(l, activeLabStatusFilter)) return false;
+    if (!labMatchesKind(l, activeLabKindFilter)) return false;
+    return true;
+  });
+
+  const list = document.getElementById('labsList');
+  if (!filtered.length){
+    list.innerHTML = '<div class="empty-state"><p>No labs match your filters.</p></div>';
+    return;
+  }
+  const byCat = {};
+  filtered.forEach(l => { const c = l.category || 'Uncategorized'; (byCat[c] ||= []).push(l); });
+
+  list.innerHTML = Object.keys(byCat).map(c => `
+    <div class="lab-category">
+      <h3><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M20 20a2 2 0 0 0 2-2V8a2 2 0 0 0-2-2h-7.9a2 2 0 0 1-1.69-.9L9.6 3.9A2 2 0 0 0 7.93 3H4a2 2 0 0 0-2 2v13a2 2 0 0 0 2 2Z"/></svg> ${escapeHtml(c)}</h3>
+      <div class="card-grid" style="grid-template-columns:repeat(auto-fill,minmax(300px,1fr));">
+        ${byCat[c].map(l => `
+          <article class="lab-card" data-lab-id="${escapeAttr(l.id)}">
+            ${renderLabMedia(l)}
+            <div class="lab-body">
+              <h4>${escapeHtml(l.title)}</h4>
+              <p class="lab-desc">${escapeHtml(l.description||'')}</p>
+              <div class="lab-meta">
+                ${l.difficulty ? `<span class="lab-difficulty">${escapeHtml(l.difficulty)}</span>` : ''}
+                ${l.platform ? `<span class="lab-difficulty">${escapeHtml(l.platform)}</span>` : ''}
+                ${l.labKind === 'home' ? `<span class="lab-difficulty">Home Lab</span>` : ''}
+                ${l.labKind === 'platform' ? `<span class="lab-difficulty">Platform Lab</span>` : ''}
+              </div>
+              ${(l.tags||[]).length ? `<div class="tags">${l.tags.map(t=>`<span class="tag">${escapeHtml(t)}</span>`).join('')}</div>` : ''}
+              ${labResourceButtons(l)}
+            </div>
+          </article>
+        `).join('')}
+      </div>
+    </div>
+  `).join('');
+
+  list.querySelectorAll('.lab-media.is-clickable').forEach(media => {
+    const open = () => openCertLightbox(media.dataset.labImage, media.dataset.labTitle);
+    media.addEventListener('click', open);
+    media.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); open(); }
+    });
+  });
+}
+function renderFeaturedLabs(){
+  const el = document.getElementById('featuredLabs');
+  const rank = { COMPLETED:0, PUBLISHED:1, IN_PROGRESS:2, PENDING:3, PLANNED:4, COMING_SOON:5, DRAFT:6, ON_HOLD:7, ARCHIVED:8 };
+  const ranked = allLabsMerged()
+    .sort((a,b) => (rank[normalizeLabStatus(a.status)] ?? 9) - (rank[normalizeLabStatus(b.status)] ?? 9))
+    .slice(0, 4);
+
+  el.innerHTML = ranked.map(l => `
+    <div class="lab-card" data-lab-id="${escapeAttr(l.id)}" style="margin-bottom:.65rem">
+      ${renderLabMedia(l)}
+      <div class="lab-body">
+        <h4>${escapeHtml(l.title)}</h4>
+        <p class="lab-desc">${escapeHtml(l.description||'')}</p>
+      </div>
+    </div>
+  `).join('');
+
+  el.querySelectorAll('.lab-media.is-clickable').forEach(media => {
+    const open = () => openCertLightbox(media.dataset.labImage, media.dataset.labTitle);
+    media.addEventListener('click', open);
+    media.addEventListener('keydown', e => {
+      if (e.key === 'Enter' || e.key === ' '){ e.preventDefault(); open(); }
+    });
+  });
+}
+function initLabFilters(){
+  const sel = document.getElementById('labCategoryFilter');
+  getLabCategories().forEach(c => {
+    const opt = document.createElement('option');
+    opt.value = c; opt.textContent = c;
+    sel.appendChild(opt);
+  });
+  const toolbar = document.getElementById('labsStatusToolbar');
+  if (toolbar){
+    toolbar.querySelectorAll('.labs-status-filter').forEach(btn => {
+      btn.addEventListener('click', () => {
+        const f = btn.dataset.lfilter || 'all';
+        if (f === 'platform' || f === 'home' || f === 'all'){
+          activeLabKindFilter = f;
+          activeLabStatusFilter = 'all';
+        } else {
+          activeLabStatusFilter = f;
+          activeLabKindFilter = 'all';
+        }
+        toolbar.querySelectorAll('.labs-status-filter').forEach(b => {
+          const on = b === btn;
+          b.classList.toggle('active', on);
+          b.setAttribute('aria-selected', on ? 'true' : 'false');
+        });
+        renderLabsList();
+      });
+    });
+  }
+  document.getElementById('labSearch').addEventListener('input', renderLabsList);
+  document.getElementById('labCategoryFilter').addEventListener('change', renderLabsList);
+  updateLabCounts();
+}
+
+/* ---------- Hire Me / CV ---------- */
+let cvAvailable = null;
+async function checkCv(){
+  const btn = document.getElementById('hireTop');
+  const heroBtn = document.getElementById('hireHero');
+  try {
+    const res = await fetch('assets/documents/cv.pdf', {method:'HEAD'});
+    cvAvailable = res.ok;
+  } catch(e){
+    cvAvailable = false; /* file:// or missing — treat as unavailable */
+  }
+  if (!cvAvailable){
+    [btn, heroBtn].forEach(b => {
+      if (!b) return;
+      b.classList.remove('hire-pulse');
+      b.classList.add('is-unavailable');
+      b.setAttribute('title','CV not configured — add assets/documents/cv.pdf');
+    });
+  }
+}
+function triggerCV(){
+  if (!cvAvailable){
+    alert('CV not configured.\n\nPlace your CV at: assets/documents/cv.pdf');
+    return;
+  }
+  const link = document.createElement('a');
+  link.href = 'assets/documents/cv.pdf';
+  link.download = 'Derek-Johnson-Elvis-CV.pdf';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+}
+
+/* ---------- Guide button ---------- */
+async function checkGuide(){
+  const btn = document.getElementById('downloadGuideBtn');
+  if (!btn) return;
+  try {
+    const res = await fetch(btn.getAttribute('href'), {method:'HEAD'});
+    if (!res.ok) btn.style.display = 'none';
+  } catch(e){
+    /* file:// blocks HEAD — leave visible */
+  }
+}
+
+/* ---------- INIT ---------- */
+document.addEventListener('DOMContentLoaded', () => {
+  document.getElementById('year').textContent = new Date().getFullYear();
+  initLoader();
+  initGate();
+  setupGateForm();
+  setupLogout();
+  initTheme();
+
+  initProjectFilters();
+  renderProjects();
+  renderCerts();
+  renderContact();
+  renderFeaturedLabs();
+  renderFocus('focusGrid');
+  renderFocus('aboutSkills');
+  renderAI('aiCards');
+  initLabFilters();
+  renderLabsList();
+
+  checkCv();
+  checkGuide();
+
+  document.querySelectorAll('[data-nav]').forEach(el => {
+    el.addEventListener('click', e => {
+      e.preventDefault();
+      const nav = el.dataset.nav;
+      if (nav) showSection(nav);
+    });
+  });
+
+  const viewProjects = document.getElementById('viewProjectsBtn');
+  if (viewProjects){
+    viewProjects.addEventListener('click', () => {
+      showSection('home');
+      setTimeout(() => {
+        const anchor = document.getElementById('projects-anchor');
+        if (anchor) anchor.scrollIntoView({ behavior:'smooth', block:'start' });
+      }, 60);
+    });
+  }
+
+  document.getElementById('hireTop').addEventListener('click', triggerCV);
+  document.getElementById('hireHero').addEventListener('click', triggerCV);
+
+  const themeBtn  = document.getElementById('themeBtn');
+  const themeMenu = document.getElementById('themeMenu');
+  themeBtn.addEventListener('click', e => {
+    e.stopPropagation();
+    const open = themeMenu.classList.toggle('open');
+    themeBtn.setAttribute('aria-expanded', open ? 'true' : 'false');
+  });
+  document.querySelectorAll('.theme-option').forEach(opt => {
+    opt.addEventListener('click', () => {
+      applyTheme(opt.dataset.theme);
+      themeMenu.classList.remove('open');
+      themeBtn.setAttribute('aria-expanded','false');
+    });
+  });
+  document.addEventListener('click', () => {
+    themeMenu.classList.remove('open');
+    themeBtn.setAttribute('aria-expanded','false');
+  });
+  document.addEventListener('keydown', e => {
+    if (e.key === 'Escape'){
+      themeMenu.classList.remove('open');
+      themeBtn.setAttribute('aria-expanded','false');
+    }
+  });
+
+  const mt = document.getElementById('mobileToggle');
+  const mn = document.getElementById('mobileNav');
+  mt.addEventListener('click', () => {
+    const open = mn.classList.toggle('open');
+    mt.setAttribute('aria-expanded', open ? 'true' : 'false');
+    mt.setAttribute('aria-label', open ? 'Close menu' : 'Open menu');
+  });
+});
+</script>
+</body>
+</html>
